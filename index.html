@@ -7,6 +7,7 @@
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -27,7 +28,6 @@
         .header-section { text-align: center; margin-bottom: 15px; }
         h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0; }
 
-        /* BARRA DE FILTROS OTIMIZADA */
         .filter-section { 
             background: var(--card-bg); border-radius: 12px; padding: 8px; margin: 10px 0; 
             display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; border: 1px solid rgba(255,255,255,0.1); 
@@ -50,7 +50,7 @@
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
         .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto;}
         table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
         td, th { padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
@@ -63,6 +63,11 @@
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px;}
         .footer-actions { display: flex; gap: 10px; margin-top: 10px; padding-bottom: 30px;}
         .btn-small { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.7rem; cursor: pointer; }
+
+        .rivalry-section { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)); border-radius: 12px; padding: 15px; margin: 20px 0; border: 1px solid var(--gold); text-align: center; }
+        .rivalry-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; margin-top: 15px; }
+        .rivalry-score { font-size: 1.8rem; font-weight: 900; color: var(--gold); }
+        .rivalry-name { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: white; }
 
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: #1e293b; padding: 20px; border-radius: 15px; border: 1px solid var(--gold); width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-sizing: border-box; }
@@ -107,6 +112,21 @@
 
     <div id="lista-confrontos"></div>
 
+    <div class="rivalry-section" id="rivalry-ui">
+        <div style="color:var(--gold); font-size:0.7rem; font-weight:bold; text-transform:uppercase">⚔️ Raio-X da Rivalidade</div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+            <select id="p1-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; margin:0"></select>
+            <span style="color: var(--gold); font-weight: bold; align-self: center;">VS</span>
+            <select id="p2-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; margin:0"></select>
+        </div>
+        <div class="rivalry-grid">
+            <div id="rival-p1-name" class="rivalry-name">-</div>
+            <div class="rivalry-score"><span id="rival-p1-wins">0</span> - <span id="rival-p2-wins">0</span></div>
+            <div id="rival-p2-name" class="rivalry-name">-</div>
+        </div>
+        <div id="rival-last-winner" style="font-size: 0.6rem; color: #94a3b8; margin-top: 10px;">Selecione para ver o histórico</div>
+    </div>
+
     <button class="btn-finish" onclick="finalizarTorneio()">Encerrar e Celebrar</button>
     <div class="footer-actions">
         <button class="btn-small" onclick="abrirModal()">Ajustar Manual</button>
@@ -139,9 +159,9 @@ const timesCategorias = {
 
 let players = [];
 let historico = JSON.parse(localStorage.getItem('fc26_site_hist')) || {};
+let hConfrontos = JSON.parse(localStorage.getItem('fc26_confrontos')) || {};
 
 function updateChip(el) { el.parentElement.classList.toggle('active', el.checked); }
-
 function toggleTodos() {
     const inputs = document.querySelectorAll('#filter-ui input');
     const algumOff = Array.from(inputs).some(i => !i.checked);
@@ -158,23 +178,30 @@ function sortearTime(id) {
 function atualizarJogadores() {
     players = document.getElementById('player-names').value.split(',').map(n => n.trim()).filter(n => n !== "");
     players.forEach(p => { if(!historico[p]) historico[p] = { titulos: 0, pontos: 0, gols: 0 }; });
-    gerarConfrontos(); renderHistorico(); calcular();
+    
+    const s1 = document.getElementById('p1-select');
+    const s2 = document.getElementById('p2-select');
+    const opts = players.map(p => `<option value="${p}">${p}</option>`).join('');
+    s1.innerHTML = opts; s2.innerHTML = opts;
+    if(players.length > 1) s2.selectedIndex = 1;
+
+    gerarConfrontos(); renderHistorico(); calcular(); mostrarRivalidade();
 }
 
 function gerarConfrontos() {
     let html = '';
     ["🕹️ Turno 1", "🕹️ Turno 2"].forEach((cat, cIdx) => {
-        html += `<div class="match-section"><div style="text-align:center; font-size:0.6rem; color:var(--gold); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px">${cat}</div>`;
+        html += `<div class="match-section"><div style="text-align:center; font-size:0.6rem; color:var(--gold); margin-bottom:10px; text-transform:uppercase">${cat}</div>`;
         for (let i = 0; i < players.length; i++) {
             for (let j = i + 1; j < players.length; j++) {
                 const id = `c${cIdx}_p${i}_p${j}`;
                 html += `
                     <div class="match-row">
-                        <div style="text-align:right"><div style="font-size:0.7rem; font-weight:bold">${players[i]}</div><input class="t-input" data-id="${id}t1" placeholder="Time"><br><button class="btn-dice" onclick="sortearTime('${id}t1')">🎲 Dado</button></div>
+                        <div style="text-align:right"><div style="font-size:0.7rem; font-weight:bold">${players[i]}</div><input class="t-input" data-id="${id}t1" placeholder="Time"><br><button class="btn-dice" onclick="sortearTime('${id}t1')">🎲</button></div>
                         <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
                         <div style="color:var(--gold); font-weight:bold; font-size:0.7rem">x</div>
                         <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
-                        <div style="text-align:left"><div style="font-size:0.7rem; font-weight:bold">${players[j]}</div><input class="t-input" data-id="${id}t2" placeholder="Time"><br><button class="btn-dice" onclick="sortearTime('${id}t2')">🎲 Dado</button></div>
+                        <div style="text-align:left"><div style="font-size:0.7rem; font-weight:bold">${players[j]}</div><input class="t-input" data-id="${id}t2" placeholder="Time"><br><button class="btn-dice" onclick="sortearTime('${id}t2')">🎲</button></div>
                     </div>`;
             }
         }
@@ -204,11 +231,23 @@ function calcular() {
         if(i === 0) badge = "👑"; 
         else if(i === 1 && ord.length > 1) badge = "🥈";
         else if(i === ord.length - 1 && ord.length > 2) badge = "🔦";
-        
         let fire = (historico[p[0]] && historico[p[0]].titulos >= 3) ? " 🔥" : "";
         return `<tr><td>${i+1}º ${badge}</td><td style="text-align:left">${p[0]}${fire}</td><td style="color:var(--gold)">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].sg}</td></tr>`;
     }).join('');
     return stats;
+}
+
+function mostrarRivalidade() {
+    const p1 = document.getElementById('p1-select').value;
+    const p2 = document.getElementById('p2-select').value;
+    if(!p1 || !p2 || p1 === p2) return;
+    document.getElementById('rival-p1-name').innerText = p1;
+    document.getElementById('rival-p2-name').innerText = p2;
+    const chave = [p1, p2].sort().join('_vs_');
+    const dados = hConfrontos[chave] || { [p1]: 0, [p2]: 0, ultimo: "Nenhum" };
+    document.getElementById('rival-p1-wins').innerText = dados[p1] || 0;
+    document.getElementById('rival-p2-wins').innerText = dados[p2] || 0;
+    document.getElementById('rival-last-winner').innerText = `Última vitória: ${dados.ultimo}`;
 }
 
 function renderHistorico() {
@@ -224,9 +263,9 @@ function abrirModal() {
     cont.innerHTML = players.map(j => `
         <div style="font-weight:bold; color:var(--accent); font-size:0.75rem; margin-top:10px">${j}</div>
         <div class="adj-grid">
-            <input type="number" id="adj-t-${j}" class="modal-input-field" placeholder="🏆" value="${historico[j].titulos}">
-            <input type="number" id="adj-p-${j}" class="modal-input-field" placeholder="📈" value="${historico[j].pontos}">
-            <input type="number" id="adj-g-${j}" class="modal-input-field" placeholder="⚽" value="${historico[j].gols}">
+            <input type="number" id="adj-t-${j}" class="modal-input-field" value="${historico[j].titulos}">
+            <input type="number" id="adj-p-${j}" class="modal-input-field" value="${historico[j].pontos}">
+            <input type="number" id="adj-g-${j}" class="modal-input-field" value="${historico[j].gols}">
         </div>`).join('');
     document.getElementById('modal-ajuste').style.display = 'flex';
 }
@@ -246,18 +285,27 @@ function finalizarTorneio() {
     const rows = document.getElementById('corpo-tabela').rows;
     if(rows.length === 0) return;
     const win = rows[0].cells[1].innerText.replace('👑','').replace('🥈','').replace('🔥','').trim();
-    
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-
     setTimeout(async () => {
-        if(confirm(`Torneio Encerrado! Vitória de ${win}. Gerar imagem e salvar histórico?`)) {
+        if(confirm(`Torneio Encerrado! Vitória de ${win}. Salvar?`)) {
             historico[win].titulos++;
             players.forEach(p => { historico[p].pontos += s[p].p; historico[p].gols += s[p].gp; });
+            document.querySelectorAll('.match-row').forEach(row => {
+                const scores = row.querySelectorAll('.placar');
+                const g1 = scores[0].value !== "" ? parseInt(scores[0].value) : null;
+                const g2 = scores[1].value !== "" ? parseInt(scores[1].value) : null;
+                if(g1 !== null && g2 !== null && g1 !== g2) {
+                    const p1 = scores[0].dataset.p; const p2 = scores[1].dataset.p;
+                    const v = g1 > g2 ? p1 : p2;
+                    const ch = [p1, p2].sort().join('_vs_');
+                    if(!hConfrontos[ch]) hConfrontos[ch] = { [p1]: 0, [p2]: 0 };
+                    hConfrontos[ch][v]++; hConfrontos[ch].ultimo = v;
+                }
+            });
             localStorage.setItem('fc26_site_hist', JSON.stringify(historico));
-            
+            localStorage.setItem('fc26_confrontos', JSON.stringify(hConfrontos));
             document.getElementById('filter-ui').style.display = 'none';
             document.querySelectorAll('.btn-dice').forEach(b => b.style.display = 'none');
-            
             const canvas = await html2canvas(document.getElementById('capture-area'), {backgroundColor:'#0f172a'});
             const a = document.createElement('a'); a.href = canvas.toDataURL(); a.download = `Campeao_${win}.png`; a.click();
             location.reload();
@@ -265,7 +313,7 @@ function finalizarTorneio() {
     }, 500);
 }
 
-function resetTotal() { if(confirm("Cuidado! Isso apagará todos os títulos e histórico. Continuar?")) { localStorage.clear(); location.reload(); } }
+function resetTotal() { if(confirm("Apagar histórico geral?")) { localStorage.clear(); location.reload(); } }
 
 atualizarJogadores();
 </script>
