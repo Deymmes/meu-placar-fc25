@@ -23,12 +23,12 @@
         body {
             font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg);
             background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
-            color: var(--text); padding: 15px; margin: 0; min-height: 100vh;
+            color: var(--text); padding: 10px; margin: 0; min-height: 100vh;
         }
 
         .container { max-width: 800px; margin: auto; }
         .header-section { text-align: center; margin-bottom: 15px; }
-        h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0; }
+        h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 
         .mode-badge { font-size: 0.6rem; background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; display: inline-block; }
 
@@ -43,9 +43,16 @@
             border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; 
             font-weight: bold; white-space: nowrap;
         }
-        .filter-chip.active { border-color: var(--gold); color: white; background: rgba(245, 158, 11, 0.2); }
+        .filter-chip.active { border-color: var(--gold); color: white; background: rgba(245, 158, 11, 0.4); }
         .filter-chip input { display: none; }
         .btn-all-toggle { font-size: 0.6rem; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; }
+
+        /* Estilo do Top 3 Teams */
+        .top-teams-section { background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 12px; margin: 10px 0; border: 1px solid var(--gold); }
+        .top-teams-title { font-size: 0.65rem; color: var(--gold); font-weight: bold; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+        .top-teams-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
+        .team-item { font-size: 0.65rem; background: rgba(255,255,255,0.05); padding: 8px 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
+        .team-pos { display: block; font-weight: 900; color: var(--gold); font-size: 0.6rem; }
 
         .rankings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .rank-card { background: var(--card-bg); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); }
@@ -54,14 +61,14 @@
 
         .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-        th { font-size: 0.6rem; color: #94a3b8; text-transform: uppercase; padding-bottom: 8px; }
+        th { font-size: 0.55rem; color: #94a3b8; text-transform: uppercase; padding-bottom: 8px; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .match-row { display: grid; grid-template-columns: 1fr 45px 20px 45px 1fr; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .score-input { background: var(--accent); border: none; border-radius: 6px; color: white; height: 38px; font-size: 1.2rem; font-weight: bold; text-align: center; width: 100%; }
         .t-input { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.2); color: #f8fafc; padding: 6px; border-radius: 6px; font-size: 0.65rem; width: 100%; margin-top: 4px; box-sizing: border-box; }
-        .btn-dice { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 4px; padding: 4px; font-size: 0.6rem; margin-top: 5px; cursor: pointer; width: 100%; }
+        .btn-dice { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 4px; padding: 4px; font-size: 0.6rem; margin-top: 5px; cursor: pointer; width: 100%; font-weight: bold; }
 
         .rivalry-section { background: rgba(30, 41, 59, 0.9); border-radius: 12px; padding: 15px; margin: 20px 0; border: 1px solid var(--gold); }
         .rivalry-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; margin-top: 15px; }
@@ -74,7 +81,6 @@
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: #1e293b; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 400px; }
         .adj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .modal-input-field { background: #0f172a; border: 1px solid #475569; color: white; padding: 10px; border-radius: 8px; text-align: center; width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -89,15 +95,29 @@
         
         <div id="filter-ui" class="filter-section">
             <button class="btn-all-toggle" onclick="toggleTodos()">TDS</button>
-            <label class="filter-chip active"><input type="checkbox" value="ing" checked onchange="updateChip(this)">ING</label>
-            <label class="filter-chip active"><input type="checkbox" value="esp" checked onchange="updateChip(this)">ESP</label>
-            <label class="filter-chip active"><input type="checkbox" value="ita" checked onchange="updateChip(this)">ITA</label>
-            <label class="filter-chip active"><input type="checkbox" value="ale" checked onchange="updateChip(this)">ALE</label>
-            <label class="filter-chip active"><input type="checkbox" value="fra" checked onchange="updateChip(this)">FRA</label>
-            <label class="filter-chip active"><input type="checkbox" value="ara" checked onchange="updateChip(this)">ARA</label>
-            <label class="filter-chip active"><input type="checkbox" value="sel" checked onchange="updateChip(this)">SEL</label>
+            <label class="filter-chip active"><input type="checkbox" value="top3" checked onchange="updateChip(this)">⭐ TOP 3</label>
+            <label class="filter-chip"><input type="checkbox" value="ing" onchange="updateChip(this)">ING</label>
+            <label class="filter-chip"><input type="checkbox" value="esp" onchange="updateChip(this)">ESP</label>
+            <label class="filter-chip"><input type="checkbox" value="ita" onchange="updateChip(this)">ITA</label>
+            <label class="filter-chip"><input type="checkbox" value="ale" onchange="updateChip(this)">ALE</label>
+            <label class="filter-chip"><input type="checkbox" value="fra" onchange="updateChip(this)">FRA</label>
+            <label class="filter-chip"><input type="checkbox" value="sel" onchange="updateChip(this)">SEL</label>
             <label class="filter-chip"><input type="checkbox" value="out" onchange="updateChip(this)">OUT</label>
         </div>
+    </div>
+
+    <div class="top-teams-section">
+        <div class="top-teams-title">⭐ Elite Mundial (Top 3 Clubes)</div>
+        <div style="display:flex; justify-content:center; gap:5px; margin-bottom:10px;">
+            <select id="select-top-pais" class="t-input" style="width:140px; margin:0; padding:2px;" onchange="renderTop3()">
+                <option value="ing">Inglaterra</option>
+                <option value="esp">Espanha</option>
+                <option value="ita">Itália</option>
+                <option value="ale">Alemanha</option>
+                <option value="fra">França</option>
+            </select>
+        </div>
+        <div class="top-teams-grid" id="top-3-display"></div>
     </div>
 
     <div class="rankings-row">
@@ -149,10 +169,7 @@
 </div>
 
 <script>
-// --- Registro Service Worker ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
-}
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); }); }
 
 const timesCategorias = {
     ing: ["Man. City", "Liverpool", "Arsenal", "Chelsea", "Man. United", "Tottenham", "Aston Villa", "Newcastle"],
@@ -165,14 +182,42 @@ const timesCategorias = {
     out: ["Inter Miami", "Benfica", "Sporting CP", "Porto", "Ajax", "PSV", "Fenerbahçe", "Galatasaray", "Flamengo", "Palmeiras", "Boca Juniors"]
 };
 
+// TOP 3 APENAS OS MAIS FORTES
+const top3Times = {
+    ing: ["Man. City", "Arsenal", "Liverpool"],
+    esp: ["Real Madrid", "Barcelona", "Atlético Madrid"],
+    ita: ["Inter Milão", "Juventus", "AC Milan"],
+    ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund"],
+    fra: ["PSG", "Mônaco", "Lille"]
+};
+
 let players = [];
 let historicoTorneio = JSON.parse(localStorage.getItem('fc26_hist_torneio')) || {};
 let historicoDuelo = JSON.parse(localStorage.getItem('fc26_hist_duelo')) || {};
 let hConfrontos = JSON.parse(localStorage.getItem('fc26_confrontos')) || {};
 
-// Função para pegar o banco de dados correto
-function getHistoricoAtual() {
-    return players.length === 2 ? historicoDuelo : historicoTorneio;
+function renderTop3() {
+    const pais = document.getElementById('select-top-pais').value;
+    const lista = top3Times[pais];
+    document.getElementById('top-3-display').innerHTML = lista.map((time, i) => `
+        <div class="team-item"><span class="team-pos">${i+1}º</span>${time}</div>
+    `).join('');
+}
+
+function sortearTime(id) {
+    const inputs = document.querySelectorAll('#filter-ui input:checked');
+    let listaSorteio = [];
+    inputs.forEach(input => {
+        if(input.value === "top3") {
+            Object.values(top3Times).forEach(listaPais => { listaSorteio = listaSorteio.concat(listaPais); });
+        } else {
+            listaSorteio = listaSorteio.concat(timesCategorias[input.value]);
+        }
+    });
+    listaSorteio = [...new Set(listaSorteio)];
+    if(listaSorteio.length === 0) return alert("Selecione uma categoria!");
+    const timeSorteado = listaSorteio[Math.floor(Math.random() * listaSorteio.length)];
+    document.querySelector(`input[data-id="${id}"]`).value = timeSorteado;
 }
 
 function updateChip(el) { el.parentElement.classList.toggle('active', el.checked); }
@@ -182,28 +227,18 @@ function toggleTodos() {
     inputs.forEach(i => { i.checked = algumOff; updateChip(i); });
 }
 
-function sortearTime(id) {
-    const sel = Array.from(document.querySelectorAll('#filter-ui input:checked')).map(cb => cb.value);
-    let lista = []; sel.forEach(c => lista = lista.concat(timesCategorias[c]));
-    if(lista.length === 0) return alert("Selecione uma categoria!");
-    document.querySelector(`input[data-id="${id}"]`).value = lista[Math.floor(Math.random()*lista.length)];
-}
+function getHistoricoAtual() { return players.length === 2 ? historicoDuelo : historicoTorneio; }
 
 function atualizarJogadores() {
     players = document.getElementById('player-names').value.split(',').map(n => n.trim()).filter(n => n !== "");
     const hist = getHistoricoAtual();
-    const modo = players.length === 2 ? "Modo Duelo (X1)" : "Modo Torneio";
-    document.getElementById('display-modo').innerText = modo;
+    document.getElementById('display-modo').innerText = players.length === 2 ? "Modo Duelo (X1)" : "Modo Torneio";
     document.getElementById('display-modo').style.background = players.length === 2 ? "#f59e0b" : "#3b82f6";
-
     players.forEach(p => { if(!hist[p]) hist[p] = { titulos: 0, pontos: 0, gols: 0 }; });
-    
-    const s1 = document.getElementById('p1-select');
-    const s2 = document.getElementById('p2-select');
     const opts = players.map(p => `<option value="${p}">${p}</option>`).join('');
-    s1.innerHTML = opts; s2.innerHTML = opts;
-    if(players.length > 1) s2.selectedIndex = 1;
-
+    document.getElementById('p1-select').innerHTML = opts;
+    document.getElementById('p2-select').innerHTML = opts;
+    if(players.length > 1) document.getElementById('p2-select').selectedIndex = 1;
     gerarConfrontos(); renderHistorico(); calcular(); mostrarRivalidade();
 }
 
@@ -286,7 +321,6 @@ function abrirModal() {
     document.getElementById('modal-ajuste').style.display = 'flex';
 }
 function fecharModal() { document.getElementById('modal-ajuste').style.display = 'none'; }
-
 function salvarAjuste() {
     const hist = getHistoricoAtual();
     players.forEach(j => {
@@ -294,8 +328,7 @@ function salvarAjuste() {
         hist[j].pontos = parseInt(document.getElementById(`adj-p-${j}`).value) || 0;
         hist[j].gols = parseInt(document.getElementById(`adj-g-${j}`).value) || 0;
     });
-    const key = players.length === 2 ? 'fc26_hist_duelo' : 'fc26_hist_torneio';
-    localStorage.setItem(key, JSON.stringify(hist));
+    localStorage.setItem(players.length === 2 ? 'fc26_hist_duelo' : 'fc26_hist_torneio', JSON.stringify(hist));
     fecharModal(); renderHistorico(); calcular();
 }
 
@@ -305,13 +338,11 @@ function finalizarTorneio() {
     if(rows.length === 0) return;
     const win = document.getElementById('corpo-tabela').rows[0].cells[1].innerText.replace('👑','').replace('🥈','').replace('🔦','').trim();
     const hist = getHistoricoAtual();
-
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
     setTimeout(async () => {
-        if(confirm(`Encerrar ${players.length === 2 ? 'Duelo' : 'Torneio'}? Vitória de ${win}.`)) {
+        if(confirm(`Finalizar Torneio? Vitória de ${win}.`)) {
             hist[win].titulos++;
             players.forEach(p => { hist[p].pontos += s[p].p; hist[p].gols += s[p].gp; });
-
             document.querySelectorAll('.match-row').forEach(row => {
                 const scores = row.querySelectorAll('.placar');
                 const g1 = scores[0].value !== "" ? parseInt(scores[0].value) : null;
@@ -324,11 +355,8 @@ function finalizarTorneio() {
                     hConfrontos[key][winner]++; hConfrontos[key].ultimo = winner;
                 }
             });
-
-            const keySave = players.length === 2 ? 'fc26_hist_duelo' : 'fc26_hist_torneio';
-            localStorage.setItem(keySave, JSON.stringify(hist));
+            localStorage.setItem(players.length === 2 ? 'fc26_hist_duelo' : 'fc26_hist_torneio', JSON.stringify(hist));
             localStorage.setItem('fc26_confrontos', JSON.stringify(hConfrontos));
-            
             document.getElementById('filter-ui').style.display = 'none';
             document.querySelectorAll('.btn-dice').forEach(b => b.style.display = 'none');
             const canvas = await html2canvas(document.getElementById('capture-area'), {backgroundColor:'#0f172a'});
@@ -340,6 +368,7 @@ function finalizarTorneio() {
 
 function resetTotal() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
 atualizarJogadores();
+renderTop3();
 </script>
 </body>
 </html>
