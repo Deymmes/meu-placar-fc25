@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EA FC 26 Pro - Elite Edition</title>
     
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5323/5323982.png">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -140,6 +146,13 @@
 </div>
 
 <script>
+// REGISTRO DE SERVICE WORKER PARA INSTALAÇÃO
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('Erro SW:', err));
+    });
+}
+
 const timesCategorias = {
     ing: ["Man. City", "Liverpool", "Arsenal", "Chelsea", "Man. United", "Tottenham", "Aston Villa", "Newcastle"],
     esp: ["Real Madrid", "Barcelona", "Atlético Madrid", "Girona", "Real Sociedad", "Villarreal", "Sevilla"],
@@ -184,17 +197,13 @@ function atualizarJogadores() {
 
 function gerarConfrontos() {
     let html = '';
-    // Definimos 3 blocos (Turnos)
     ["🕹️ Turno 1", "🕹️ Turno 2", "🕹️ Turno 3"].forEach((cat, cIdx) => {
         html += `<div class="match-section"><div style="text-align:center; font-size:0.65rem; color:var(--gold); margin-bottom:12px; font-weight:bold; text-transform:uppercase;">${cat}</div>`;
-        
         if (players.length === 2) {
-            // Se houver apenas 2 jogadores, gera 2 jogos por turno (totalizando 6 na série)
             for (let k = 1; k <= 2; k++) {
                 html += criarLinhaJogo(cIdx, 0, 1, k);
             }
         } else {
-            // Se houver 3 ou mais, faz o tradicional "todos contra todos" no turno
             for (let i = 0; i < players.length; i++) {
                 for (let j = i + 1; j < players.length; j++) {
                     html += criarLinhaJogo(cIdx, i, j, 0);
@@ -209,8 +218,7 @@ function gerarConfrontos() {
 
 function criarLinhaJogo(cIdx, i, j, k) {
     const id = `c${cIdx}_p${i}_p${j}_k${k}`;
-    return `
-        <div class="match-row">
+    return `<div class="match-row">
             <div style="text-align:right">
                 <div style="font-size:0.75rem; font-weight:bold">${players[i]}</div>
                 <input class="t-input" data-id="${id}t1" placeholder="Time">
@@ -299,46 +307,35 @@ function finalizarTorneio() {
     const rows = document.getElementById('corpo-tabela').rows;
     if(rows.length === 0) return;
     const win = document.getElementById('corpo-tabela').rows[0].cells[1].innerText.replace('👑','').replace('🥈','').replace('🔦','').trim();
-    
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-    
     setTimeout(async () => {
         if(confirm(`Torneio Encerrado! Vitória de ${win}. Salvar?`)) {
             historico[win].titulos++;
             players.forEach(p => { historico[p].pontos += s[p].p; historico[p].gols += s[p].gp; });
-
             document.querySelectorAll('.match-row').forEach(row => {
                 const scores = row.querySelectorAll('.placar');
                 const g1 = scores[0].value !== "" ? parseInt(scores[0].value) : null;
                 const g2 = scores[1].value !== "" ? parseInt(scores[1].value) : null;
                 if(g1 !== null && g2 !== null && g1 !== g2) {
-                    const player1 = scores[0].dataset.p; 
-                    const player2 = scores[1].dataset.p;
-                    const winner = g1 > g2 ? player1 : player2;
-                    const key = [player1, player2].sort().join('_vs_');
-                    if(!hConfrontos[key]) hConfrontos[key] = { [player1]: 0, [player2]: 0 };
-                    hConfrontos[key][winner]++;
-                    hConfrontos[key].ultimo = winner;
+                    const p1 = scores[0].dataset.p; const p2 = scores[1].dataset.p;
+                    const winner = g1 > g2 ? p1 : p2;
+                    const key = [p1, p2].sort().join('_vs_');
+                    if(!hConfrontos[key]) hConfrontos[key] = { [p1]: 0, [p2]: 0 };
+                    hConfrontos[key][winner]++; hConfrontos[key].ultimo = winner;
                 }
             });
-
             localStorage.setItem('fc26_site_hist', JSON.stringify(historico));
             localStorage.setItem('fc26_confrontos', JSON.stringify(hConfrontos));
-            
             document.getElementById('filter-ui').style.display = 'none';
             document.querySelectorAll('.btn-dice').forEach(b => b.style.display = 'none');
-            
             const canvas = await html2canvas(document.getElementById('capture-area'), {backgroundColor:'#0f172a'});
-            const a = document.createElement('a'); 
-            a.href = canvas.toDataURL(); a.download = `Resultado_${win}.png`; a.click();
-            
+            const a = document.createElement('a'); a.href = canvas.toDataURL(); a.download = `Resultado_${win}.png`; a.click();
             location.reload();
         }
     }, 500);
 }
 
 function resetTotal() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
-
 atualizarJogadores();
 </script>
 </body>
