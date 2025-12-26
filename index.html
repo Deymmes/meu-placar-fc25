@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EA FC 26 Pro - Elite Edition</title>
     
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -29,51 +25,48 @@
         h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0; }
 
         .filter-section { 
-            background: var(--card-bg); border-radius: 12px; padding: 6px; margin: 10px 0; 
-            display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; border: 1px solid rgba(255,255,255,0.1); 
-            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            background: var(--card-bg); border-radius: 12px; padding: 8px; margin: 10px 0; 
+            display: flex; gap: 6px; border: 1px solid rgba(255,255,255,0.1); 
+            overflow-x: auto; scrollbar-width: none;
         }
+        .filter-section::-webkit-scrollbar { display: none; }
         .filter-chip { 
-            font-size: 0.55rem; background: rgba(15, 23, 42, 0.8); padding: 4px 6px; 
-            border-radius: 15px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; 
-            display: flex; align-items: center; gap: 2px; font-weight: bold; white-space: nowrap;
+            font-size: 0.6rem; background: rgba(15, 23, 42, 0.8); padding: 5px 10px; 
+            border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; 
+            font-weight: bold; white-space: nowrap; transition: 0.3s;
         }
         .filter-chip.active { border-color: var(--gold); color: white; background: rgba(245, 158, 11, 0.2); }
         .filter-chip input { display: none; }
-        
-        .btn-all-toggle { 
-            font-size: 0.55rem; background: var(--gold); color: black; padding: 4px 8px; 
-            border-radius: 15px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; white-space: nowrap;
-        }
+        .btn-all-toggle { font-size: 0.6rem; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; }
 
         .rankings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .rank-card { background: var(--card-bg); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); }
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
         .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto;}
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        td, th { padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        th { font-size: 0.6rem; color: #94a3b8; text-transform: uppercase; padding-bottom: 8px; }
+        td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
-        .match-row { display: grid; grid-template-columns: 1fr 45px 20px 45px 1fr; align-items: center; gap: 5px; padding: 8px 0; }
-        .score-input { background: var(--accent); border: none; border-radius: 6px; color: white; height: 35px; font-size: 1.1rem; font-weight: bold; text-align: center; width: 100%; }
-        .t-input { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); color: #f8fafc; padding: 5px; border-radius: 4px; font-size: 0.65rem; width: 100%; margin-top: 3px; }
-        
-        .btn-dice { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 4px; padding: 2px 4px; font-size: 0.55rem; margin-top: 3px; cursor: pointer; }
-        .btn-finish { background: var(--success); color: white; width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px;}
-        .footer-actions { display: flex; gap: 10px; margin-top: 10px; padding-bottom: 30px;}
-        .btn-small { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.7rem; cursor: pointer; }
+        .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .match-row { display: grid; grid-template-columns: 1fr 45px 20px 45px 1fr; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .score-input { background: var(--accent); border: none; border-radius: 6px; color: white; height: 38px; font-size: 1.2rem; font-weight: bold; text-align: center; width: 100%; }
+        .t-input { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.2); color: #f8fafc; padding: 6px; border-radius: 6px; font-size: 0.65rem; width: 100%; margin-top: 4px; box-sizing: border-box; }
+        .btn-dice { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 4px; padding: 4px; font-size: 0.6rem; margin-top: 5px; cursor: pointer; width: 100%; }
 
-        .rivalry-section { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)); border-radius: 12px; padding: 15px; margin: 20px 0; border: 1px solid var(--gold); text-align: center; }
+        .rivalry-section { background: rgba(30, 41, 59, 0.9); border-radius: 12px; padding: 15px; margin: 20px 0; border: 1px solid var(--gold); }
         .rivalry-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; margin-top: 15px; }
-        .rivalry-score { font-size: 1.8rem; font-weight: 900; color: var(--gold); }
-        .rivalry-name { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: white; }
+        .rivalry-score { font-size: 2rem; font-weight: 900; color: var(--gold); }
 
+        .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
+        .footer-actions { display: flex; gap: 10px; margin-top: 15px; padding-bottom: 40px; }
+        .btn-small { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.7rem; cursor: pointer; }
+        
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: #1e293b; padding: 20px; border-radius: 15px; border: 1px solid var(--gold); width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-sizing: border-box; }
-        .modal-input-field { background: #0f172a; border: 1px solid #475569; color: white; padding: 8px; border-radius: 6px; text-align: center; width: 100%; font-size: 0.8rem; box-sizing: border-box; }
+        .modal-content { background: #1e293b; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 400px; }
         .adj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .modal-input-field { background: #0f172a; border: 1px solid #475569; color: white; padding: 10px; border-radius: 8px; text-align: center; width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -82,7 +75,7 @@
     <div class="header-section">
         <h1>Champions EA FC 26</h1>
         <div style="margin-bottom: 10px;">
-            <input type="text" id="player-names" onchange="atualizarJogadores()" value="João, Deymmes, Dario" style="background:transparent; border:none; border-bottom:1px solid #475569; color:white; text-align:center; font-size:0.8rem; width:220px; outline:none">
+            <input type="text" id="player-names" onchange="atualizarJogadores()" value="João, Deymmes, Dario" style="background:transparent; border:none; border-bottom:2px solid var(--accent); color:white; text-align:center; font-size:1rem; font-weight:bold; width:80%; outline:none; padding: 5px;">
         </div>
         
         <div id="filter-ui" class="filter-section">
@@ -114,18 +107,18 @@
     <div id="lista-confrontos"></div>
 
     <div class="rivalry-section" id="rivalry-ui">
-        <div style="color:var(--gold); font-size:0.7rem; font-weight:bold; text-transform:uppercase">⚔️ Raio-X da Rivalidade</div>
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-            <select id="p1-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; margin:0"></select>
+        <div style="color:var(--gold); font-size:0.75rem; font-weight:bold; text-transform:uppercase">⚔️ Raio-X da Rivalidade</div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+            <select id="p1-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
             <span style="color: var(--gold); font-weight: bold; align-self: center;">VS</span>
-            <select id="p2-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; margin:0"></select>
+            <select id="p2-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
         </div>
         <div class="rivalry-grid">
             <div id="rival-p1-name" class="rivalry-name">-</div>
             <div class="rivalry-score"><span id="rival-p1-wins">0</span> - <span id="rival-p2-wins">0</span></div>
             <div id="rival-p2-name" class="rivalry-name">-</div>
         </div>
-        <div id="rival-last-winner" style="font-size: 0.6rem; color: #94a3b8; margin-top: 10px;">Selecione para ver o histórico</div>
+        <div id="rival-last-winner" style="font-size: 0.65rem; color: #94a3b8; margin-top: 12px;">Último vencedor: <span id="val-ultimo">-</span></div>
     </div>
 
     <button class="btn-finish" onclick="finalizarTorneio()">Encerrar e Celebrar</button>
@@ -137,10 +130,10 @@
 
 <div id="modal-ajuste">
     <div class="modal-content">
-        <h2 style="color:var(--gold); font-size: 1rem; text-align:center; margin-top:0">Ajustar Hall da Fama</h2>
+        <h2 style="color:var(--gold); font-size: 1.1rem; text-align:center; margin-top:0">Hall da Fama</h2>
         <div id="campos-ajuste"></div>
-        <div style="display:flex; gap:10px; margin-top:20px">
-            <button class="btn-finish" style="flex:2; margin:0; padding:10px" onclick="salvarAjuste()">Salvar Dados</button>
+        <div style="display:flex; gap:10px; margin-top:25px">
+            <button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button>
             <button class="btn-small" style="flex:1" onclick="fecharModal()">Sair</button>
         </div>
     </div>
@@ -191,25 +184,47 @@ function atualizarJogadores() {
 
 function gerarConfrontos() {
     let html = '';
-    ["🕹️ Turno 1", "🕹️ Turno 2"].forEach((cat, cIdx) => {
-        html += `<div class="match-section"><div style="text-align:center; font-size:0.6rem; color:var(--gold); margin-bottom:10px; text-transform:uppercase">${cat}</div>`;
-        for (let i = 0; i < players.length; i++) {
-            for (let j = i + 1; j < players.length; j++) {
-                const id = `c${cIdx}_p${i}_p${j}`;
-                html += `
-                    <div class="match-row">
-                        <div style="text-align:right"><div style="font-size:0.7rem; font-weight:bold">${players[i]}</div><input class="t-input" data-id="${id}t1" placeholder="Time"><br><button class="btn-dice" onclick="sortearTime('${id}t1')">🎲</button></div>
-                        <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
-                        <div style="color:var(--gold); font-weight:bold; font-size:0.7rem">x</div>
-                        <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
-                        <div style="text-align:left"><div style="font-size:0.7rem; font-weight:bold">${players[j]}</div><input class="t-input" data-id="${id}t2" placeholder="Time"><br><button class="btn-dice" onclick="sortearTime('${id}t2')">🎲</button></div>
-                    </div>`;
+    // Definimos 3 blocos (Turnos)
+    ["🕹️ Turno 1", "🕹️ Turno 2", "🕹️ Turno 3"].forEach((cat, cIdx) => {
+        html += `<div class="match-section"><div style="text-align:center; font-size:0.65rem; color:var(--gold); margin-bottom:12px; font-weight:bold; text-transform:uppercase;">${cat}</div>`;
+        
+        if (players.length === 2) {
+            // Se houver apenas 2 jogadores, gera 2 jogos por turno (totalizando 6 na série)
+            for (let k = 1; k <= 2; k++) {
+                html += criarLinhaJogo(cIdx, 0, 1, k);
+            }
+        } else {
+            // Se houver 3 ou mais, faz o tradicional "todos contra todos" no turno
+            for (let i = 0; i < players.length; i++) {
+                for (let j = i + 1; j < players.length; j++) {
+                    html += criarLinhaJogo(cIdx, i, j, 0);
+                }
             }
         }
         html += `</div>`;
     });
     document.getElementById('lista-confrontos').innerHTML = html;
-    document.querySelectorAll('input').forEach(i => i.addEventListener('input', calcular));
+    document.querySelectorAll('.placar').forEach(i => i.addEventListener('input', calcular));
+}
+
+function criarLinhaJogo(cIdx, i, j, k) {
+    const id = `c${cIdx}_p${i}_p${j}_k${k}`;
+    return `
+        <div class="match-row">
+            <div style="text-align:right">
+                <div style="font-size:0.75rem; font-weight:bold">${players[i]}</div>
+                <input class="t-input" data-id="${id}t1" placeholder="Time">
+                <button class="btn-dice" onclick="sortearTime('${id}t1')">🎲 Sortear</button>
+            </div>
+            <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
+            <div style="color:var(--gold); font-weight:bold; font-size:0.8rem">x</div>
+            <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
+            <div style="text-align:left">
+                <div style="font-size:0.75rem; font-weight:bold">${players[j]}</div>
+                <input class="t-input" data-id="${id}t2" placeholder="Time">
+                <button class="btn-dice" onclick="sortearTime('${id}t2')">🎲 Sortear</button>
+            </div>
+        </div>`;
 }
 
 function calcular() {
@@ -220,29 +235,18 @@ function calcular() {
         const g2 = s[1].value !== "" ? parseInt(s[1].value) : null;
         if(g1 !== null && g2 !== null) {
             const p1 = s[0].dataset.p; const p2 = s[1].dataset.p;
-            stats[p1].sg += (g1-g2); stats[p1].gp += g1; stats[p2].sg += (g2-g1); stats[p2].gp += g2;
-            if(g1 > g2) { 
-                stats[p1].p += 3; stats[p1].v += 1; 
-                stats[p2].d += 1;
-            }
-            else if(g2 > g1) { 
-                stats[p2].p += 3; stats[p2].v += 1; 
-                stats[p1].d += 1;
-            }
-            else { 
-                stats[p1].p += 1; stats[p2].p += 1; 
-                stats[p1].e += 1; stats[p2].e += 1;
-            }
+            stats[p1].gp += g1; stats[p2].gp += g2;
+            stats[p1].sg += (g1-g2); stats[p2].sg += (g2-g1);
+            if(g1 > g2) { stats[p1].p += 3; stats[p1].v += 1; stats[p2].d += 1; }
+            else if(g2 > g1) { stats[p2].p += 3; stats[p2].v += 1; stats[p1].d += 1; }
+            else { stats[p1].p += 1; stats[p2].p += 1; stats[p1].e += 1; stats[p2].e += 1; }
         }
     });
-    const ord = Object.entries(stats).sort((a,b) => b[1].p - a[1].p || b[1].sg - a[1].sg);
+
+    const ord = Object.entries(stats).sort((a,b) => b[1].p - a[1].p || b[1].sg - a[1].sg || b[1].gp - a[1].gp);
     document.getElementById('corpo-tabela').innerHTML = ord.map((p, i) => {
-        let badge = "";
-        if(i === 0) badge = "👑"; 
-        else if(i === 1 && ord.length > 1) badge = "🥈";
-        else if(i === ord.length - 1 && ord.length > 2) badge = "🔦";
-        let fire = (historico[p[0]] && historico[p[0]].titulos >= 3) ? " 🔥" : "";
-        return `<tr><td>${i+1}º ${badge}</td><td style="text-align:left">${p[0]}${fire}</td><td style="color:var(--gold)">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].e}</td><td>${p[1].d}</td><td>${p[1].sg}</td></tr>`;
+        let badge = i === 0 ? "👑" : (i === 1 ? "🥈" : "🔦");
+        return `<tr><td>${i+1}º ${badge}</td><td style="text-align:left; font-weight:bold">${p[0]}</td><td style="color:var(--gold); font-weight:900">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].e}</td><td>${p[1].d}</td><td>${p[1].sg}</td></tr>`;
     }).join('');
     return stats;
 }
@@ -257,7 +261,7 @@ function mostrarRivalidade() {
     const dados = hConfrontos[chave] || { [p1]: 0, [p2]: 0, ultimo: "Nenhum" };
     document.getElementById('rival-p1-wins').innerText = dados[p1] || 0;
     document.getElementById('rival-p2-wins').innerText = dados[p2] || 0;
-    document.getElementById('rival-last-winner').innerText = `Última vitória: ${dados.ultimo}`;
+    document.getElementById('val-ultimo').innerText = dados.ultimo || "-";
 }
 
 function renderHistorico() {
@@ -271,11 +275,11 @@ function renderHistorico() {
 function abrirModal() {
     const cont = document.getElementById('campos-ajuste');
     cont.innerHTML = players.map(j => `
-        <div style="font-weight:bold; color:var(--accent); font-size:0.75rem; margin-top:10px">${j}</div>
+        <div style="font-weight:bold; color:var(--accent); font-size:0.8rem; margin:15px 0 5px 0">${j}</div>
         <div class="adj-grid">
-            <input type="number" id="adj-t-${j}" class="modal-input-field" value="${historico[j].titulos}">
-            <input type="number" id="adj-p-${j}" class="modal-input-field" value="${historico[j].pontos}">
-            <input type="number" id="adj-g-${j}" class="modal-input-field" value="${historico[j].gols}">
+            <input type="number" id="adj-t-${j}" class="modal-input-field" value="${historico[j].titulos}" placeholder="TIT">
+            <input type="number" id="adj-p-${j}" class="modal-input-field" value="${historico[j].pontos}" placeholder="PTS">
+            <input type="number" id="adj-g-${j}" class="modal-input-field" value="${historico[j].gols}" placeholder="GOLS">
         </div>`).join('');
     document.getElementById('modal-ajuste').style.display = 'flex';
 }
@@ -294,36 +298,46 @@ function finalizarTorneio() {
     const s = calcular();
     const rows = document.getElementById('corpo-tabela').rows;
     if(rows.length === 0) return;
-    const win = rows[0].cells[1].innerText.replace('👑','').replace('🥈','').replace('🔥','').trim();
+    const win = document.getElementById('corpo-tabela').rows[0].cells[1].innerText.replace('👑','').replace('🥈','').replace('🔦','').trim();
+    
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+    
     setTimeout(async () => {
         if(confirm(`Torneio Encerrado! Vitória de ${win}. Salvar?`)) {
             historico[win].titulos++;
             players.forEach(p => { historico[p].pontos += s[p].p; historico[p].gols += s[p].gp; });
+
             document.querySelectorAll('.match-row').forEach(row => {
                 const scores = row.querySelectorAll('.placar');
                 const g1 = scores[0].value !== "" ? parseInt(scores[0].value) : null;
                 const g2 = scores[1].value !== "" ? parseInt(scores[1].value) : null;
                 if(g1 !== null && g2 !== null && g1 !== g2) {
-                    const p1 = scores[0].dataset.p; const p2 = scores[1].dataset.p;
-                    const v = g1 > g2 ? p1 : p2;
-                    const ch = [p1, p2].sort().join('_vs_');
-                    if(!hConfrontos[ch]) hConfrontos[ch] = { [p1]: 0, [p2]: 0 };
-                    hConfrontos[ch][v]++; hConfrontos[ch].ultimo = v;
+                    const player1 = scores[0].dataset.p; 
+                    const player2 = scores[1].dataset.p;
+                    const winner = g1 > g2 ? player1 : player2;
+                    const key = [player1, player2].sort().join('_vs_');
+                    if(!hConfrontos[key]) hConfrontos[key] = { [player1]: 0, [player2]: 0 };
+                    hConfrontos[key][winner]++;
+                    hConfrontos[key].ultimo = winner;
                 }
             });
-            localStorage.setItem('fc25_site_hist', JSON.stringify(historico));
+
+            localStorage.setItem('fc26_site_hist', JSON.stringify(historico));
             localStorage.setItem('fc26_confrontos', JSON.stringify(hConfrontos));
+            
             document.getElementById('filter-ui').style.display = 'none';
             document.querySelectorAll('.btn-dice').forEach(b => b.style.display = 'none');
+            
             const canvas = await html2canvas(document.getElementById('capture-area'), {backgroundColor:'#0f172a'});
-            const a = document.createElement('a'); a.href = canvas.toDataURL(); a.download = `Campeao_${win}.png`; a.click();
+            const a = document.createElement('a'); 
+            a.href = canvas.toDataURL(); a.download = `Resultado_${win}.png`; a.click();
+            
             location.reload();
         }
     }, 500);
 }
 
-function resetTotal() { if(confirm("Apagar histórico geral?")) { localStorage.clear(); location.reload(); } }
+function resetTotal() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
 
 atualizarJogadores();
 </script>
