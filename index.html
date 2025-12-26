@@ -28,21 +28,23 @@
         .header-section { text-align: center; margin-bottom: 15px; }
         h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0; }
 
+        /* BARRA DE FILTROS OTIMIZADA EM UMA LINHA */
         .filter-section { 
-            background: var(--card-bg); border-radius: 12px; padding: 8px; margin: 10px 0; 
-            display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; border: 1px solid rgba(255,255,255,0.1); 
+            background: var(--card-bg); border-radius: 12px; padding: 6px; margin: 10px 0; 
+            display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; border: 1px solid rgba(255,255,255,0.1); 
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
         }
         .filter-chip { 
-            font-size: 0.55rem; background: rgba(15, 23, 42, 0.8); padding: 4px 8px; 
+            font-size: 0.55rem; background: rgba(15, 23, 42, 0.8); padding: 4px 6px; 
             border-radius: 15px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; 
-            display: flex; align-items: center; gap: 3px; font-weight: bold;
+            display: flex; align-items: center; gap: 2px; font-weight: bold; white-space: nowrap;
         }
         .filter-chip.active { border-color: var(--gold); color: white; background: rgba(245, 158, 11, 0.2); }
         .filter-chip input { display: none; }
         
         .btn-all-toggle { 
-            font-size: 0.55rem; background: var(--gold); color: black; padding: 4px 10px; 
-            border-radius: 15px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase;
+            font-size: 0.55rem; background: var(--gold); color: black; padding: 4px 8px; 
+            border-radius: 15px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; white-space: nowrap;
         }
 
         .rankings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
@@ -85,15 +87,15 @@
         </div>
         
         <div id="filter-ui" class="filter-section">
-            <button class="btn-all-toggle" onclick="toggleTodos()">Todos</button>
-            <label class="filter-chip active"><input type="checkbox" value="ing" checked onchange="updateChip(this)"> ING</label>
-            <label class="filter-chip active"><input type="checkbox" value="esp" checked onchange="updateChip(this)"> ESP</label>
-            <label class="filter-chip active"><input type="checkbox" value="ita" checked onchange="updateChip(this)"> ITA</label>
-            <label class="filter-chip active"><input type="checkbox" value="ale" checked onchange="updateChip(this)"> ALE</label>
-            <label class="filter-chip active"><input type="checkbox" value="fra" checked onchange="updateChip(this)"> FRA</label>
-            <label class="filter-chip active"><input type="checkbox" value="ara" checked onchange="updateChip(this)"> ARA</label>
-            <label class="filter-chip active"><input type="checkbox" value="sel" checked onchange="updateChip(this)"> SEL</label>
-            <label class="filter-chip"><input type="checkbox" value="out" onchange="updateChip(this)"> OUTROS</label>
+            <button class="btn-all-toggle" onclick="toggleTodos()">TDS</button>
+            <label class="filter-chip active"><input type="checkbox" value="ing" checked onchange="updateChip(this)">ING</label>
+            <label class="filter-chip active"><input type="checkbox" value="esp" checked onchange="updateChip(this)">ESP</label>
+            <label class="filter-chip active"><input type="checkbox" value="ita" checked onchange="updateChip(this)">ITA</label>
+            <label class="filter-chip active"><input type="checkbox" value="ale" checked onchange="updateChip(this)">ALE</label>
+            <label class="filter-chip active"><input type="checkbox" value="fra" checked onchange="updateChip(this)">FRA</label>
+            <label class="filter-chip active"><input type="checkbox" value="ara" checked onchange="updateChip(this)">ARA</label>
+            <label class="filter-chip active"><input type="checkbox" value="sel" checked onchange="updateChip(this)">SEL</label>
+            <label class="filter-chip"><input type="checkbox" value="out" onchange="updateChip(this)">OUT</label>
         </div>
     </div>
 
