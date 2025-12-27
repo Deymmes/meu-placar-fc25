@@ -74,12 +74,20 @@
         .rivalry-score { font-size: 2rem; font-weight: 900; color: var(--gold); }
 
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
-        .footer-actions { display: flex; gap: 8px; margin-top: 15px; padding-bottom: 40px; }
-        .btn-small { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.65rem; cursor: pointer; }
+        .footer-actions { display: flex; gap: 5px; margin-top: 15px; padding-bottom: 40px; }
+        .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.6rem; cursor: pointer; font-weight: bold; }
         
-        #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: #1e293b; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 400px; }
-        .adj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        /* MODAL AJUSTADO PARA CELULAR */
+        #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 10px; }
+        .modal-content { 
+            background: #1e293b; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); 
+            width: 100%; max-width: 450px; max-height: 85vh; overflow-y: auto; 
+        }
+        .adj-header-grid { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 5px; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #475569; padding-bottom: 5px; }
+        .adj-header-grid span { font-size: 0.5rem; color: var(--gold); font-weight: bold; text-transform: uppercase; }
+        .adj-row { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 5px; margin-bottom: 12px; align-items: center; }
+        .adj-name { font-size: 0.7rem; font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .modal-input-field { background: #0f172a; border: 1px solid #475569; color: white; padding: 8px 2px; border-radius: 8px; text-align: center; width: 100%; font-size: 0.8rem; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -159,9 +167,15 @@
 
 <div id="modal-ajuste">
     <div class="modal-content">
-        <h2 style="color:var(--gold); font-size: 1.1rem; text-align:center; margin-top:0">Configurações</h2>
+        <h2 style="color:var(--gold); font-size: 1rem; text-align:center; margin: 0 0 15px 0;">Configurações do Ranking</h2>
+        <div class="adj-header-grid">
+            <span>Jogador</span>
+            <span>Títulos</span>
+            <span>Pontos</span>
+            <span>Gols</span>
+        </div>
         <div id="campos-ajuste"></div>
-        <div style="display:flex; gap:10px; margin-top:25px">
+        <div style="display:flex; gap:10px; margin-top:20px">
             <button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button>
             <button class="btn-small" style="flex:1" onclick="fecharModal()">Sair</button>
         </div>
@@ -169,7 +183,6 @@
 </div>
 
 <script>
-// --- CHAVES FIXAS (Nunca mais mudar) ---
 const DB_TORNEIO = 'FC_PRO_HIST_GLOBAL_TORNEIO';
 const DB_DUELO = 'FC_PRO_HIST_GLOBAL_DUELO';
 const DB_RIVALIDADE = 'FC_PRO_HIST_GLOBAL_RIVALIDADE';
@@ -310,22 +323,29 @@ function renderHistorico() {
 function exportarDados() {
     const backup = { torneio: historicoTorneio, duelo: historicoDuelo, rivalidade: hConfrontos };
     const code = btoa(JSON.stringify(backup));
-    const input = prompt("Backup Gerado! Copie este código e guarde-o. Para restaurar, cole um código aqui:");
+    const input = prompt("Backup Gerado! Copie o código abaixo. Para restaurar, cole um código aqui:");
     if(input && input.length > 50) {
         try {
             const restaurado = JSON.parse(atob(input));
             localStorage.setItem(DB_TORNEIO, JSON.stringify(restaurado.torneio));
             localStorage.setItem(DB_DUELO, JSON.stringify(restaurado.duelo));
             localStorage.setItem(DB_RIVALIDADE, JSON.stringify(restaurado.rivalidade));
-            alert("Dados Restaurados com Sucesso!"); location.reload();
-        } catch(e) { alert("Código de backup inválido!"); }
+            alert("Sucesso!"); location.reload();
+        } catch(e) { alert("Código inválido!"); }
     }
 }
 
 function abrirModal() {
     const hist = getHistoricoAtual();
     const cont = document.getElementById('campos-ajuste');
-    cont.innerHTML = players.map(j => `<div style="font-weight:bold; color:var(--accent); font-size:0.8rem; margin:15px 0 5px 0">${j}</div><div class="adj-grid"><input type="number" id="adj-t-${j}" class="modal-input-field" value="${hist[j].titulos}" placeholder="TIT"><input type="number" id="adj-p-${j}" class="modal-input-field" value="${hist[j].pontos}" placeholder="PTS"><input type="number" id="adj-g-${j}" class="modal-input-field" value="${hist[j].gols}" placeholder="GOLS"></div>`).join('');
+    cont.innerHTML = players.map(j => `
+        <div class="adj-row">
+            <span class="adj-name">${j}</span>
+            <input type="number" id="adj-t-${j}" class="modal-input-field" value="${hist[j].titulos || 0}">
+            <input type="number" id="adj-p-${j}" class="modal-input-field" value="${hist[j].pontos || 0}">
+            <input type="number" id="adj-g-${j}" class="modal-input-field" value="${hist[j].gols || 0}">
+        </div>
+    `).join('');
     document.getElementById('modal-ajuste').style.display = 'flex';
 }
 function fecharModal() { document.getElementById('modal-ajuste').style.display = 'none'; }
@@ -346,7 +366,6 @@ function finalizarTorneio() {
     if(rows.length === 0) return;
     const win = rows[0].cells[1].innerText.trim();
     const hist = getHistoricoAtual();
-
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
     setTimeout(() => {
         if(confirm(`Finalizar? Campeão: ${win}.`)) {
