@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EA FC 26 Pro - Elite Edition</title>
+    <title>EA FC Pro - Elite Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
@@ -47,7 +47,6 @@
         .filter-chip input { display: none; }
         .btn-all-toggle { font-size: 0.6rem; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; }
 
-        /* Estilo do Top 3 Teams */
         .top-teams-section { background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 12px; margin: 10px 0; border: 1px solid var(--gold); }
         .top-teams-title { font-size: 0.65rem; color: var(--gold); font-weight: bold; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
         .top-teams-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
@@ -75,8 +74,8 @@
         .rivalry-score { font-size: 2rem; font-weight: 900; color: var(--gold); }
 
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
-        .footer-actions { display: flex; gap: 10px; margin-top: 15px; padding-bottom: 40px; }
-        .btn-small { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.7rem; cursor: pointer; }
+        .footer-actions { display: flex; gap: 8px; margin-top: 15px; padding-bottom: 40px; }
+        .btn-small { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.65rem; cursor: pointer; }
         
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: #1e293b; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 400px; }
@@ -87,7 +86,7 @@
 
 <div class="container" id="capture-area">
     <div class="header-section">
-        <h1>Champions EA FC 26</h1>
+        <h1>Champions EA FC Pro</h1>
         <div id="display-modo" class="mode-badge">Modo Torneio</div>
         <div style="margin-bottom: 10px;">
             <input type="text" id="player-names" onchange="atualizarJogadores()" value="João, Deymmes, Dario" style="background:transparent; border:none; border-bottom:2px solid var(--accent); color:white; text-align:center; font-size:1rem; font-weight:bold; width:80%; outline:none; padding: 5px;">
@@ -107,7 +106,7 @@
     </div>
 
     <div class="top-teams-section">
-        <div class="top-teams-title">⭐ Elite Mundial (Top 3 Clubes)</div>
+        <div class="top-teams-title">⭐ Elite Mundial (Top 3)</div>
         <div style="display:flex; justify-content:center; gap:5px; margin-bottom:10px;">
             <select id="select-top-pais" class="t-input" style="width:140px; margin:0; padding:2px;" onchange="renderTop3()">
                 <option value="ing">Inglaterra</option>
@@ -152,14 +151,15 @@
 
     <button class="btn-finish" onclick="finalizarTorneio()">Encerrar e Celebrar</button>
     <div class="footer-actions">
-        <button class="btn-small" onclick="abrirModal()">Ajustar Manual</button>
-        <button class="btn-small" style="color:#ef4444" onclick="resetTotal()">Reset Geral</button>
+        <button class="btn-small" onclick="abrirModal()">⚙️ Ajustar</button>
+        <button class="btn-small" onclick="exportarDados()">📥 Backup</button>
+        <button class="btn-small" style="color:#ef4444" onclick="resetTotal()">🗑️ Reset</button>
     </div>
 </div>
 
 <div id="modal-ajuste">
     <div class="modal-content">
-        <h2 id="modal-title" style="color:var(--gold); font-size: 1.1rem; text-align:center; margin-top:0">Hall da Fama</h2>
+        <h2 style="color:var(--gold); font-size: 1.1rem; text-align:center; margin-top:0">Configurações</h2>
         <div id="campos-ajuste"></div>
         <div style="display:flex; gap:10px; margin-top:25px">
             <button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button>
@@ -169,7 +169,10 @@
 </div>
 
 <script>
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); }); }
+// --- CHAVES FIXAS (Nunca mais mudar) ---
+const DB_TORNEIO = 'FC_PRO_HIST_GLOBAL_TORNEIO';
+const DB_DUELO = 'FC_PRO_HIST_GLOBAL_DUELO';
+const DB_RIVALIDADE = 'FC_PRO_HIST_GLOBAL_RIVALIDADE';
 
 const timesCategorias = {
     ing: ["Man. City", "Liverpool", "Arsenal", "Chelsea", "Man. United", "Tottenham", "Aston Villa", "Newcastle"],
@@ -182,7 +185,6 @@ const timesCategorias = {
     out: ["Inter Miami", "Benfica", "Sporting CP", "Porto", "Ajax", "PSV", "Fenerbahçe", "Galatasaray", "Flamengo", "Palmeiras", "Boca Juniors"]
 };
 
-// TOP 3 APENAS OS MAIS FORTES
 const top3Times = {
     ing: ["Man. City", "Arsenal", "Liverpool"],
     esp: ["Real Madrid", "Barcelona", "Atlético Madrid"],
@@ -192,32 +194,26 @@ const top3Times = {
 };
 
 let players = [];
-let historicoTorneio = JSON.parse(localStorage.getItem('fc26_hist_torneio')) || {};
-let historicoDuelo = JSON.parse(localStorage.getItem('fc26_hist_duelo')) || {};
-let hConfrontos = JSON.parse(localStorage.getItem('fc26_confrontos')) || {};
+let historicoTorneio = JSON.parse(localStorage.getItem(DB_TORNEIO)) || {};
+let historicoDuelo = JSON.parse(localStorage.getItem(DB_DUELO)) || {};
+let hConfrontos = JSON.parse(localStorage.getItem(DB_RIVALIDADE)) || {};
 
 function renderTop3() {
     const pais = document.getElementById('select-top-pais').value;
     const lista = top3Times[pais];
-    document.getElementById('top-3-display').innerHTML = lista.map((time, i) => `
-        <div class="team-item"><span class="team-pos">${i+1}º</span>${time}</div>
-    `).join('');
+    document.getElementById('top-3-display').innerHTML = lista.map((time, i) => `<div class="team-item"><span class="team-pos">${i+1}º</span>${time}</div>`).join('');
 }
 
 function sortearTime(id) {
     const inputs = document.querySelectorAll('#filter-ui input:checked');
     let listaSorteio = [];
     inputs.forEach(input => {
-        if(input.value === "top3") {
-            Object.values(top3Times).forEach(listaPais => { listaSorteio = listaSorteio.concat(listaPais); });
-        } else {
-            listaSorteio = listaSorteio.concat(timesCategorias[input.value]);
-        }
+        if(input.value === "top3") { Object.values(top3Times).forEach(listaPais => { listaSorteio = listaSorteio.concat(listaPais); }); }
+        else { listaSorteio = listaSorteio.concat(timesCategorias[input.value]); }
     });
     listaSorteio = [...new Set(listaSorteio)];
     if(listaSorteio.length === 0) return alert("Selecione uma categoria!");
-    const timeSorteado = listaSorteio[Math.floor(Math.random() * listaSorteio.length)];
-    document.querySelector(`input[data-id="${id}"]`).value = timeSorteado;
+    document.querySelector(`input[data-id="${id}"]`).value = listaSorteio[Math.floor(Math.random() * listaSorteio.length)];
 }
 
 function updateChip(el) { el.parentElement.classList.toggle('active', el.checked); }
@@ -286,10 +282,7 @@ function calcular() {
         }
     });
     const ord = Object.entries(stats).sort((a,b) => b[1].p - a[1].p || b[1].sg - a[1].sg || b[1].gp - a[1].gp);
-    document.getElementById('corpo-tabela').innerHTML = ord.map((p, i) => {
-        let badge = i === 0 ? "👑" : (i === 1 ? "🥈" : "🔦");
-        return `<tr><td>${i+1}º ${badge}</td><td style="text-align:left; font-weight:bold">${p[0]}</td><td style="color:var(--gold); font-weight:900">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].e}</td><td>${p[1].d}</td><td>${p[1].sg}</td></tr>`;
-    }).join('');
+    document.getElementById('corpo-tabela').innerHTML = ord.map((p, i) => `<tr><td>${i+1}º</td><td style="text-align:left; font-weight:bold">${p[0]}</td><td style="color:var(--gold); font-weight:900">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].e}</td><td>${p[1].d}</td><td>${p[1].sg}</td></tr>`).join('');
     return stats;
 }
 
@@ -314,6 +307,21 @@ function renderHistorico() {
     document.getElementById('hist-gols').innerHTML = r('gols');
 }
 
+function exportarDados() {
+    const backup = { torneio: historicoTorneio, duelo: historicoDuelo, rivalidade: hConfrontos };
+    const code = btoa(JSON.stringify(backup));
+    const input = prompt("Backup Gerado! Copie este código e guarde-o. Para restaurar, cole um código aqui:");
+    if(input && input.length > 50) {
+        try {
+            const restaurado = JSON.parse(atob(input));
+            localStorage.setItem(DB_TORNEIO, JSON.stringify(restaurado.torneio));
+            localStorage.setItem(DB_DUELO, JSON.stringify(restaurado.duelo));
+            localStorage.setItem(DB_RIVALIDADE, JSON.stringify(restaurado.rivalidade));
+            alert("Dados Restaurados com Sucesso!"); location.reload();
+        } catch(e) { alert("Código de backup inválido!"); }
+    }
+}
+
 function abrirModal() {
     const hist = getHistoricoAtual();
     const cont = document.getElementById('campos-ajuste');
@@ -328,7 +336,7 @@ function salvarAjuste() {
         hist[j].pontos = parseInt(document.getElementById(`adj-p-${j}`).value) || 0;
         hist[j].gols = parseInt(document.getElementById(`adj-g-${j}`).value) || 0;
     });
-    localStorage.setItem(players.length === 2 ? 'fc26_hist_duelo' : 'fc26_hist_torneio', JSON.stringify(hist));
+    localStorage.setItem(players.length === 2 ? DB_DUELO : DB_TORNEIO, JSON.stringify(hist));
     fecharModal(); renderHistorico(); calcular();
 }
 
@@ -336,11 +344,12 @@ function finalizarTorneio() {
     const s = calcular();
     const rows = document.getElementById('corpo-tabela').rows;
     if(rows.length === 0) return;
-    const win = document.getElementById('corpo-tabela').rows[0].cells[1].innerText.replace('👑','').replace('🥈','').replace('🔦','').trim();
+    const win = rows[0].cells[1].innerText.trim();
     const hist = getHistoricoAtual();
+
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-    setTimeout(async () => {
-        if(confirm(`Finalizar Torneio? Vitória de ${win}.`)) {
+    setTimeout(() => {
+        if(confirm(`Finalizar? Campeão: ${win}.`)) {
             hist[win].titulos++;
             players.forEach(p => { hist[p].pontos += s[p].p; hist[p].gols += s[p].gp; });
             document.querySelectorAll('.match-row').forEach(row => {
@@ -355,20 +364,15 @@ function finalizarTorneio() {
                     hConfrontos[key][winner]++; hConfrontos[key].ultimo = winner;
                 }
             });
-            localStorage.setItem(players.length === 2 ? 'fc26_hist_duelo' : 'fc26_hist_torneio', JSON.stringify(hist));
-            localStorage.setItem('fc26_confrontos', JSON.stringify(hConfrontos));
-            document.getElementById('filter-ui').style.display = 'none';
-            document.querySelectorAll('.btn-dice').forEach(b => b.style.display = 'none');
-            const canvas = await html2canvas(document.getElementById('capture-area'), {backgroundColor:'#0f172a'});
-            const a = document.createElement('a'); a.href = canvas.toDataURL(); a.download = `Resultado.png`; a.click();
+            localStorage.setItem(players.length === 2 ? DB_DUELO : DB_TORNEIO, JSON.stringify(hist));
+            localStorage.setItem(DB_RIVALIDADE, JSON.stringify(hConfrontos));
             location.reload();
         }
     }, 500);
 }
 
 function resetTotal() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
-atualizarJogadores();
-renderTop3();
+atualizarJogadores(); renderTop3();
 </script>
 </body>
 </html>
