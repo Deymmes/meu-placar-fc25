@@ -28,8 +28,27 @@
         }
 
         .container { max-width: 800px; margin: auto; }
-        .header-section { text-align: center; margin-bottom: 15px; }
+        .header-section { text-align: center; margin-bottom: 25px; }
         h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+
+        /* ESTILO DOS NOVOS TÍTULOS DE SEÇÃO */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0 15px 0;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 1.5px;
+        }
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.5), transparent);
+        }
 
         .mode-badge { font-size: 0.6rem; background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; display: inline-block; }
 
@@ -58,9 +77,8 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* GRID REFINADO COM TEXTOS +2PX */
+        /* GRID REFINADO */
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        
         .match-row { 
             display: grid; 
             grid-template-columns: 1fr 45px 25px 45px 1fr; 
@@ -72,21 +90,15 @@
         .match-row:last-child { border-bottom: none; }
         
         .player-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-        
-        /* Ajuste de Respiro Lateral */
         .player-side.left { text-align: right; align-items: flex-end; padding-right: 18px; }
         .player-side.right { text-align: left; align-items: flex-start; padding-left: 18px; }
 
-        /* AUMENTO DE 2PX NOS TEXTOS */
         .p-name { font-size: 0.8rem; font-weight: 800; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-        
         .team-box { display: flex; gap: 4px; width: 100%; max-width: 110px; align-items: center; }
-        
         .t-input { 
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); 
             color: #fff; padding: 4px 0; border-radius: 4px; 
-            font-size: 0.65rem; /* Aumentado em 2px aproximado */
-            width: 100%; outline: none; text-align: center;
+            font-size: 0.65rem; width: 100%; outline: none; text-align: center;
         }
 
         .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; filter: grayscale(1); flex-shrink: 0; }
@@ -100,16 +112,18 @@
 
         .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.75rem; opacity: 0.3; width: 25px; }
 
-        /* RIVALIDADE PREMIUM */
+        /* RIVALIDADE */
         .rivalry-section { 
             background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%);
-            border-radius: 16px; padding: 20px; margin: 25px 0; border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px; padding: 20px; margin: 10px 0 25px 0; border: 1px solid rgba(245, 158, 11, 0.3);
         }
-        .rivalry-title { color: var(--gold); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; text-align: center; letter-spacing: 2px; margin-bottom: 20px; }
         .rivalry-grid { display: grid; grid-template-columns: 1fr 100px 1fr; align-items: center; gap: 10px; }
         .rival-card { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.03); }
         .rivalry-score-big { font-size: 2.2rem; font-weight: 900; color: var(--gold); text-align: center; }
         .dominance-bar-container { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px 0; overflow: hidden; display: flex; }
+        .dom-fill { height: 100%; transition: width 0.5s ease; }
+        .dom-p1 { background: var(--accent); }
+        .dom-p2 { background: var(--gold); }
         .last-winner-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
 
         /* FOOTER */
@@ -148,12 +162,14 @@
         </div>
     </div>
 
+    <div class="section-title">🏆 Quadro de Honra</div>
     <div class="rankings-row">
         <div class="rank-card"><h3>🏆 Títulos</h3><div id="hist-titulos"></div></div>
         <div class="rank-card"><h3>📈 Pontos</h3><div id="hist-pontos"></div></div>
         <div class="rank-card"><h3>⚽ Gols</h3><div id="hist-gols"></div></div>
     </div>
 
+    <div class="section-title">📊 Campeonato em Andamento</div>
     <div class="table-container">
         <table>
             <thead><tr><th style="font-size:0.65rem; color:#94a3b8">Pos</th><th style="text-align:left; font-size:0.65rem; color:#94a3b8">Player</th><th style="font-size:0.65rem; color:#94a3b8">P</th><th style="font-size:0.65rem; color:#94a3b8">V</th><th style="font-size:0.65rem; color:#94a3b8">E</th><th style="font-size:0.65rem; color:#94a3b8">D</th><th style="font-size:0.65rem; color:#94a3b8">SG</th></tr></thead>
@@ -161,10 +177,11 @@
         </table>
     </div>
 
+    <div class="section-title">🕹️ Confrontos da Rodada</div>
     <div id="lista-confrontos"></div>
 
+    <div class="section-title">⚔️ Análise de Rivalidade</div>
     <div class="rivalry-section" id="rivalry-ui">
-        <div class="rivalry-title">⚔️ Raio-X da Rivalidade</div>
         <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
             <select id="p1-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
             <span style="color: var(--gold); font-weight: bold; align-self: center;">VS</span>
@@ -205,6 +222,7 @@
 </div>
 
 <script>
+// (O script permanece o mesmo das versões anteriores)
 const DB_TORNEIO = 'FC_PRO_HIST_GLOBAL_TORNEIO';
 const DB_DUELO = 'FC_PRO_HIST_GLOBAL_DUELO';
 const DB_RIVALIDADE = 'FC_PRO_HIST_GLOBAL_RIVALIDADE';
