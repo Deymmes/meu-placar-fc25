@@ -110,6 +110,7 @@
 
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .footer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-bottom: 40px; }
+        .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .action-row { display: flex; gap: 5px; }
         .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.65rem; cursor: pointer; font-weight: bold; }
         
@@ -153,7 +154,7 @@
     <div class="section-title">📊 Campeonato em Andamento</div>
     <div class="table-container">
         <table>
-            <thead><tr><th>Pos</th><th style="text-align:left">Player</th><th>P</th><th>V</th><th>E</th><th>D</th><th>SG</th></tr></thead>
+            <thead><tr><th style="font-size:0.65rem; color:#94a3b8">Pos</th><th style="text-align:left; font-size:0.65rem; color:#94a3b8">Player</th><th style="font-size:0.65rem; color:#94a3b8">P</th><th style="font-size:0.65rem; color:#94a3b8">V</th><th style="font-size:0.65rem; color:#94a3b8">E</th><th style="font-size:0.65rem; color:#94a3b8">D</th><th style="font-size:0.65rem; color:#94a3b8">SG</th></tr></thead>
             <tbody id="corpo-tabela"></tbody>
         </table>
     </div>
@@ -180,10 +181,11 @@
         <div style="text-align: center;"><div class="last-winner-badge">Último vencedor: <span id="val-ultimo">-</span></div></div>
     </div>
 
+    <button class="btn-clear-session" onclick="limparPlacaresNuvem()">🧹 Limpar placares desta rodada</button>
     <button class="btn-finish" onclick="finalizarTurno()">Encerrar e Sincronizar Tudo</button>
     <div class="footer-actions">
         <div class="action-row">
-            <button class="btn-small" onclick="abrirAdmin()">⚙️ Painel Admin</button>
+            <button class="btn-small" onclick="abrirAdmin()">⚙️ Ajustar</button>
             <button class="btn-small" style="color:#ef4444" onclick="resetTotalSala()">🗑️ Reset Sala</button>
         </div>
     </div>
@@ -214,14 +216,14 @@ const firebaseConfig = {
 };
 
 const timesPool = {
-    ing: ["Man. City", "Liverpool", "Chelsea", "Arsenal", "Tottenham"],
-    esp: ["Real Madrid", "Barcelona", "Atlético Madrid"],
-    ita: ["Inter Milão", "Juventus", "AC Milan"],
-    ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund"],
-    fra: ["PSG", "Mônaco", "Marseille"],
-    sel: ["Brasil 🇧🇷", "Espanha 🇪🇸", "França 🇫🇷", "Argentina 🇦🇷"],
+    ing: ["Man. City", "Liverpool", "Chelsea", "Arsenal", "Man. United", "Tottenham", "Aston Villa", "Newcastle"],
+    esp: ["Real Madrid", "Barcelona", "Atlético Madrid", "Girona", "Real Sociedad", "Villarreal", "Sevilla"],
+    ita: ["Inter Milão", "Juventus", "AC Milan", "Napoli", "Atalanta", "AS Roma", "Lazio"],
+    ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund", "RB Leipzig", "Stuttgart"],
+    fra: ["PSG", "Mônaco", "Marseille", "Lille", "Lyon", "Nice"],
+    sel: ["Brasil 🇧🇷", "Espanha 🇪🇸", "França 🇫🇷", "Argentina 🇦🇷", "Portugal 🇵🇹", "Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Itália 🇮🇹", "Alemanha 🇩🇪"],
     top3: ["Real Madrid", "Man. City", "Bayern München", "PSG", "Inter Milão"],
-    out: ["Inter Miami", "Benfica", "Porto", "Ajax"]
+    out: ["Inter Miami", "Benfica", "Sporting CP", "Porto", "Ajax", "PSV", "Fenerbahçe", "Galatasaray"]
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -260,11 +262,10 @@ function atualizarInterface() {
     const isDuelo = pList.length === 2;
     document.getElementById('display-modo').innerText = isDuelo ? "Modo Duelo (X1)" : "Modo Torneio";
     
-    // BANCO DE DADOS SEPARADO: Se 2 jogadores, usa ranking_duelo. Se +2, usa ranking_torneio.
     const hist = isDuelo ? (cloudData.ranking_duelo || {}) : (cloudData.ranking_torneio || {});
     
-    const r = (f) => [...pList].sort((a,b) => (hist[b]?.[f]||0) - (hist[a]?.[f]||0)).map(p => `
-        <div class="rank-item"><span>${p}</span><b>${hist[p]?.[f]||0}</b></div>`).join('');
+    const r = (f) => [...pList].sort((a,b) => (hist[b]?.[f]||0) - (hist[a]?.[f]||0)).map((p, i) => `
+        <div class="rank-item"><span>${i+1}º ${p}</span><b>${hist[p]?.[f]||0}</b></div>`).join('');
     document.getElementById('hist-titulos').innerHTML = r('titulos');
     document.getElementById('hist-pontos').innerHTML = r('pontos');
     document.getElementById('hist-gols').innerHTML = r('gols');
@@ -348,7 +349,7 @@ function calcularTabela() {
         }
     });
     const ord = Object.entries(t).sort((a,b) => b[1].p - a[1].p || b[1].sg - a[1].sg);
-    document.getElementById('corpo-tabela').innerHTML = ord.map((p, i) => `<tr><td style="font-weight:900">${i+1}º</td><td align="left" style="font-weight:800">${p[0]}</td><td style="color:var(--gold); font-weight:900">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].e}</td><td>${p[1].d}</td><td>${p[1].sg}</td></tr>`).join('');
+    document.getElementById('corpo-tabela').innerHTML = ord.map((p, i) => `<tr><td style="font-weight:900">${i+1}º</td><td align="left" style="font-weight:800; text-align:left;">${p[0]}</td><td style="color:var(--gold); font-weight:900">${p[1].p}</td><td>${p[1].v}</td><td>${p[1].e}</td><td>${p[1].d}</td><td>${p[1].sg}</td></tr>`).join('');
     return t;
 }
 
@@ -366,7 +367,9 @@ function renderRivalidade() {
     document.getElementById('bar-1').style.width = perc + "%"; document.getElementById('bar-2').style.width = (100 - perc) + "%";
 }
 
-function salvarPlayersNuvem() { if(confirm("Resetar rodada?")) db.ref(`salas/${salaAtual}`).update({ players: document.getElementById('player-names').value, jogos: null }); }
+function salvarPlayersNuvem() { if(confirm("Mudar jogadores e resetar rodada?")) db.ref(`salas/${salaAtual}`).update({ players: document.getElementById('player-names').value, jogos: null }); }
+
+function limparPlacaresNuvem() { if(confirm("Limpar placares e times desta rodada na nuvem?")) db.ref(`salas/${salaAtual}/jogos`).remove(); }
 
 function finalizarTurno() {
     const s = calcularTabela();
@@ -386,8 +389,8 @@ function finalizarTurno() {
     let riv = cloudData.rivalidade || {};
     Object.entries(cloudData.jogos || {}).forEach(([id, jg]) => {
         if(jg.g1 !== "" && jg.g2 !== "" && jg.g1 !== jg.g2) {
-            const pts = id.split('_');
-            const n1 = pList[pts[1].replace('p','')]; const n2 = pList[pts[2].replace('p','')];
+            const parts = id.split('_');
+            const n1 = pList[parts[1].replace('p','')]; const n2 = pList[parts[2].replace('p','')];
             const vencedor = jg.g1 > jg.g2 ? n1 : n2;
             const chave = [n1, n2].sort().join('_vs_');
             if(!riv[chave]) riv[chave] = { [n1]: 0, [n2]: 0 };
@@ -421,7 +424,7 @@ function salvarAjusteAdmin() {
     pList.forEach(p => { novo[p] = { titulos: parseInt(document.getElementById(`adj-t-${p}`).value)||0, pontos: parseInt(document.getElementById(`adj-p-${p}`).value)||0, gols: parseInt(document.getElementById(`adj-g-${p}`).value)||0 }; });
     db.ref(`salas/${salaAtual}/${dbPath}`).set(novo); fecharAdmin();
 }
-function resetTotalSala() { if(confirm("APAGAR TUDO?")) db.ref(`salas/${salaAtual}`).remove(); }
+function resetTotalSala() { if(confirm("CUIDADO: APAGAR TUDO DESTA SALA?")) db.ref(`salas/${salaAtual}`).remove(); }
 </script>
 </body>
 </html>
