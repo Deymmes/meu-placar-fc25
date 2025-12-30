@@ -52,18 +52,18 @@
         .rankings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .rank-card { background: var(--card-bg); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); }
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
-        .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* GRID REFINADO COM 3% A MAIS DE ESPAÇO */
+        /* GRID REFINADO COM TEXTOS +2PX */
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         
         .match-row { 
             display: grid; 
-            grid-template-columns: 1fr 45px 25px 45px 1fr; /* Proporção travada no centro */
+            grid-template-columns: 1fr 45px 25px 45px 1fr; 
             align-items: center; 
             padding: 15px 0; 
             border-bottom: 1px solid rgba(255,255,255,0.05); 
@@ -73,53 +73,51 @@
         
         .player-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
         
-        /* Ajuste de Respiro (+3%) */
+        /* Ajuste de Respiro Lateral */
         .player-side.left { text-align: right; align-items: flex-end; padding-right: 18px; }
         .player-side.right { text-align: left; align-items: flex-start; padding-left: 18px; }
 
-        .p-name { font-size: 0.65rem; font-weight: 800; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        /* AUMENTO DE 2PX NOS TEXTOS */
+        .p-name { font-size: 0.8rem; font-weight: 800; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
         
-        .team-box { display: flex; gap: 4px; width: 100%; max-width: 100px; align-items: center; }
+        .team-box { display: flex; gap: 4px; width: 100%; max-width: 110px; align-items: center; }
         
         .t-input { 
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); 
             color: #fff; padding: 4px 0; border-radius: 4px; 
-            font-size: 0.5rem; width: 100%; outline: none; text-align: center;
+            font-size: 0.65rem; /* Aumentado em 2px aproximado */
+            width: 100%; outline: none; text-align: center;
         }
 
-        .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 0.9rem; filter: grayscale(1); flex-shrink: 0; }
+        .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; filter: grayscale(1); flex-shrink: 0; }
         .btn-dice:active { transform: scale(1.2); filter: grayscale(0); }
 
         .score-input { 
             background: var(--accent); border: none; border-radius: 6px; color: white; 
-            height: 40px; font-size: 1.3rem; font-weight: 900; text-align: center; width: 45px; 
+            height: 42px; font-size: 1.4rem; font-weight: 900; text-align: center; width: 45px; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.7rem; opacity: 0.3; width: 25px; }
+        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.75rem; opacity: 0.3; width: 25px; }
 
         /* RIVALIDADE PREMIUM */
         .rivalry-section { 
             background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%);
             border-radius: 16px; padding: 20px; margin: 25px 0; border: 1px solid rgba(245, 158, 11, 0.3);
         }
-        .rivalry-title { color: var(--gold); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; text-align: center; letter-spacing: 2px; margin-bottom: 20px; }
+        .rivalry-title { color: var(--gold); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; text-align: center; letter-spacing: 2px; margin-bottom: 20px; }
         .rivalry-grid { display: grid; grid-template-columns: 1fr 100px 1fr; align-items: center; gap: 10px; }
         .rival-card { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.03); }
-        .rival-card.win { border: 1px solid var(--gold); background: rgba(245, 158, 11, 0.05); }
         .rivalry-score-big { font-size: 2.2rem; font-weight: 900; color: var(--gold); text-align: center; }
         .dominance-bar-container { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px 0; overflow: hidden; display: flex; }
-        .dom-fill { height: 100%; transition: width 0.5s ease; }
-        .dom-p1 { background: var(--accent); }
-        .dom-p2 { background: var(--gold); }
-        .last-winner-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; font-weight: 900; text-transform: uppercase; }
+        .last-winner-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
 
         /* FOOTER */
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .footer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-bottom: 40px; }
-        .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
+        .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .action-row { display: flex; gap: 5px; }
-        .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.6rem; cursor: pointer; font-weight: bold; }
+        .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.65rem; cursor: pointer; font-weight: bold; }
         
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 10px; }
         .modal-content { background: #1e293b; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 450px; overflow-y: auto; max-height: 85vh; }
@@ -134,7 +132,7 @@
         <h1>Champions EA FC Pro</h1>
         <div id="display-modo" class="mode-badge">Modo Torneio</div>
         <div style="margin-bottom: 10px;">
-            <input type="text" id="player-names" onchange="atualizarJogadores()" value="João, Deymmes, Dario" style="background:transparent; border:none; border-bottom:2px solid var(--accent); color:white; text-align:center; font-size:1rem; font-weight:bold; width:80%; outline:none; padding: 5px;">
+            <input type="text" id="player-names" onchange="atualizarJogadores()" value="João, Deymmes, Dario" style="background:transparent; border:none; border-bottom:2px solid var(--accent); color:white; text-align:center; font-size:1.1rem; font-weight:bold; width:80%; outline:none; padding: 5px;">
         </div>
         
         <div id="filter-ui" class="filter-section">
@@ -158,7 +156,7 @@
 
     <div class="table-container">
         <table>
-            <thead><tr><th style="font-size:0.55rem; color:#94a3b8">Pos</th><th style="text-align:left; font-size:0.55rem; color:#94a3b8">Player</th><th style="font-size:0.55rem; color:#94a3b8">P</th><th style="font-size:0.55rem; color:#94a3b8">V</th><th style="font-size:0.55rem; color:#94a3b8">E</th><th style="font-size:0.55rem; color:#94a3b8">D</th><th style="font-size:0.55rem; color:#94a3b8">SG</th></tr></thead>
+            <thead><tr><th style="font-size:0.65rem; color:#94a3b8">Pos</th><th style="text-align:left; font-size:0.65rem; color:#94a3b8">Player</th><th style="font-size:0.65rem; color:#94a3b8">P</th><th style="font-size:0.65rem; color:#94a3b8">V</th><th style="font-size:0.65rem; color:#94a3b8">E</th><th style="font-size:0.65rem; color:#94a3b8">D</th><th style="font-size:0.65rem; color:#94a3b8">SG</th></tr></thead>
             <tbody id="corpo-tabela"></tbody>
         </table>
     </div>
@@ -173,9 +171,9 @@
             <select id="p2-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
         </div>
         <div class="rivalry-grid">
-            <div id="card-p1" class="rival-card" style="text-align: right;"><span id="rival-p1-name" style="font-weight:900; font-size:0.8rem; color:white;">-</span></div>
+            <div id="card-p1" class="rival-card" style="text-align: right;"><span id="rival-p1-name" style="font-weight:900; font-size:0.95rem; color:white;">-</span></div>
             <div class="rivalry-score-big"><span id="rival-p1-wins">0</span>:<span id="rival-p2-wins">0</span></div>
-            <div id="card-p2" class="rival-card" style="text-align: left;"><span id="rival-p2-name" style="font-weight:900; font-size:0.8rem; color:white;">-</span></div>
+            <div id="card-p2" class="rival-card" style="text-align: left;"><span id="rival-p2-name" style="font-weight:900; font-size:0.95rem; color:white;">-</span></div>
         </div>
         <div class="dominance-bar-container">
             <div id="bar-p1" class="dom-fill dom-p1" style="width: 50%;"></div>
@@ -197,7 +195,7 @@
 
 <div id="modal-ajuste">
     <div class="modal-content">
-        <h2 style="color:var(--gold); font-size: 1rem; text-align:center; margin: 0 0 15px 0;">Configurações</h2>
+        <h2 style="color:var(--gold); font-size: 1.1rem; text-align:center; margin: 0 0 15px 0;">Configurações</h2>
         <div id="campos-ajuste"></div>
         <div style="display:flex; gap:10px; margin-top:20px">
             <button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button>
@@ -300,7 +298,7 @@ function getHistoricoAtual() { return players.length === 2 ? historicoDuelo : hi
 function gerarConfrontos() {
     let html = '';
     ["🕹️ Turno 1", "🕹️ Turno 2", "🕹️ Turno 3"].forEach((cat, cIdx) => {
-        html += `<div class="match-section"><div style="text-align:center; font-size:0.6rem; color:var(--gold); margin-bottom:12px; font-weight:900; text-transform:uppercase;">${cat}</div>`;
+        html += `<div class="match-section"><div style="text-align:center; font-size:0.65rem; color:var(--gold); margin-bottom:12px; font-weight:900; text-transform:uppercase;">${cat}</div>`;
         if (players.length === 2) {
             for (let k = 1; k <= 2; k++) { html += criarLinhaJogo(cIdx, 0, 1, k); }
         } else {
@@ -406,7 +404,7 @@ function exportarDados() {
 function abrirModal() {
     const hist = getHistoricoAtual();
     document.getElementById('campos-ajuste').innerHTML = players.map(j => `
-        <div class="adj-row"><span style="color:#fff; font-size:0.75rem">${j}</span>
+        <div class="adj-row"><span style="color:#fff; font-size:0.85rem">${j}</span>
             <input type="number" id="adj-t-${j}" class="modal-input-field" value="${hist[j].titulos || 0}">
             <input type="number" id="adj-p-${j}" class="modal-input-field" value="${hist[j].pontos || 0}">
             <input type="number" id="adj-g-${j}" class="modal-input-field" value="${hist[j].gols || 0}">
