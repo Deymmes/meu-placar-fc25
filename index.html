@@ -18,6 +18,7 @@
             --bg: #0f172a; --card-bg: rgba(30, 41, 59, 0.7);
             --accent: #3b82f6; --gold: #f59e0b;
             --success: #10b981; --text: #f8fafc;
+            --danger: #ef4444;
         }
 
         body {
@@ -58,10 +59,12 @@
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
         .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
+        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         th { font-size: 0.55rem; color: #94a3b8; text-transform: uppercase; padding-bottom: 8px; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 6px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
 
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .match-row { display: grid; grid-template-columns: 1fr 45px 20px 45px 1fr; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
@@ -138,6 +141,7 @@
             <tbody id="corpo-tabela"></tbody>
         </table>
     </div>
+    <button class="btn-clear-session" onclick="limparApenasRodada()">🧹 Limpar placares desta rodada</button>
 
     <div id="lista-confrontos"></div>
 
@@ -160,25 +164,32 @@
     <div class="footer-actions">
         <button class="btn-small" onclick="abrirModal()">⚙️ Ajustar</button>
         <button class="btn-small" onclick="exportarDados()">📥 Backup</button>
-        <button class="btn-small" style="color:#ef4444" onclick="resetTotal()">🗑️ Reset</button>
+        <button class="btn-small" style="color:#ef4444" onclick="resetTotal()">🗑️ Reset TOTAL</button>
     </div>
 </div>
 
 <div id="modal-ajuste">
     <div class="modal-content">
         <h2 style="color:var(--gold); font-size: 1rem; text-align:center; margin: 0 0 15px 0;">Configurações</h2>
-        <div class="adj-header-grid"><span>Jogador</span><span>Títulos</span><span>Pontos</span><span>Gols</span></div>
+        <div class="adj-header-grid">
+            <span>Jogador</span>
+            <span>Títulos</span>
+            <span>Pontos</span>
+            <span>Gols</span>
+        </div>
         <div id="campos-ajuste"></div>
-        <div style="display:flex; gap:10px; margin-top:20px"><button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button><button class="btn-small" style="flex:1" onclick="fecharModal()">Sair</button></div>
+        <div style="display:flex; gap:10px; margin-top:20px">
+            <button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button>
+            <button class="btn-small" style="flex:1" onclick="fecharModal()">Sair</button>
+        </div>
     </div>
 </div>
 
 <script>
-// --- CHAVES FIXAS ---
 const DB_TORNEIO = 'FC_PRO_HIST_GLOBAL_TORNEIO';
 const DB_DUELO = 'FC_PRO_HIST_GLOBAL_DUELO';
 const DB_RIVALIDADE = 'FC_PRO_HIST_GLOBAL_RIVALIDADE';
-const DB_SAVE_TEMP = 'FC_PRO_LIVE_SESSAO';
+const DB_SESSAO_TEMP = 'FC_PRO_LIVE_SESSAO_SAVE';
 
 const timesCategorias = {
     ing: ["Man. City", "Liverpool", "Chelsea", "Arsenal", "Man. United", "Tottenham", "Aston Villa", "Newcastle"],
@@ -193,9 +204,9 @@ const timesCategorias = {
 const top3Times = {
     ing: ["Man. City", "Chelsea", "Liverpool"],
     esp: ["Real Madrid", "Barcelona", "Atlético Madrid"],
-    ita: ["Inter Milão", "Juventus", "AC Milan"],
-    ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund"],
-    fra: ["PSG", "Mônaco", "Lille"]
+    ita: ["Inter Milão", "Atalanta", "AC Milan"],
+    ale: ["RB Leipzig", "Bayern München", "Borussia Dortmund"],
+    fra: ["PSG", "Marseille", "Lille"]
 };
 
 let players = [];
@@ -209,7 +220,7 @@ function renderTop3() {
     document.getElementById('top-3-display').innerHTML = lista.map((time, i) => `<div class="team-item"><span class="team-pos">${i+1}º</span>${time}</div>`).join('');
 }
 
-// CORREÇÃO: SORTEIO SEM REPETIÇÃO INFALÍVEL
+// 1. SORTEIO SEM REPETIÇÃO
 function sortearTime(id) {
     const inputsFiltro = document.querySelectorAll('#filter-ui input:checked');
     let listaSorteio = [];
@@ -218,21 +229,12 @@ function sortearTime(id) {
         else { listaSorteio = listaSorteio.concat(timesCategorias[input.value]); }
     });
     listaSorteio = [...new Set(listaSorteio)];
-
-    // Pega todos os times que JÁ ESTÃO nos campos de texto da tela
-    const timesNaTela = Array.from(document.querySelectorAll('.t-input'))
-                             .map(inp => inp.value)
-                             .filter(v => v !== "");
-
-    // Filtra para sobrar apenas os que não saíram
+    const timesNaTela = Array.from(document.querySelectorAll('.t-input')).map(inp => inp.value).filter(v => v !== "");
     let disponiveis = listaSorteio.filter(t => !timesNaTela.includes(t));
-
-    // Se a lista esgotar, usa a original para não travar
     if(disponiveis.length === 0) disponiveis = listaSorteio;
-
     const sorteado = disponiveis[Math.floor(Math.random() * disponiveis.length)];
     document.querySelector(`input[data-id="${id}"]`).value = sorteado;
-    salvarSessao(); // Salva o time sorteado na memória na hora
+    salvarProgresso();
 }
 
 function updateChip(el) { el.parentElement.classList.toggle('active', el.checked); }
@@ -242,25 +244,33 @@ function toggleTodos() {
     inputs.forEach(i => { i.checked = algumOff; updateChip(i); });
 }
 
-function getHistoricoAtual() { return players.length === 2 ? historicoDuelo : historicoTorneio; }
-
-// AUTO-SAVE: SALVAR TUDO EM TEMPO REAL
-function salvarSessao() {
-    const dados = {};
+// 2. AUTO-SAVE (SESSÃO TEMPORÁRIA)
+function salvarProgresso() {
+    const dadosSessao = {};
     document.querySelectorAll('input.score-input, input.t-input').forEach(input => {
-        if(input.dataset.id) dados[input.dataset.id] = input.value;
+        if(input.dataset.id) dadosSessao[input.dataset.id] = input.value;
     });
-    localStorage.setItem(DB_SAVE_TEMP, JSON.stringify(dados));
+    localStorage.setItem(DB_SESSAO_TEMP, JSON.stringify(dadosSessao));
 }
 
-function carregarSessao() {
-    const salvo = JSON.parse(localStorage.getItem(DB_SAVE_TEMP));
+function carregarProgresso() {
+    const salvo = JSON.parse(localStorage.getItem(DB_SESSAO_TEMP));
     if(!salvo) return;
     document.querySelectorAll('input.score-input, input.t-input').forEach(input => {
         if(input.dataset.id && salvo[input.dataset.id]) {
             input.value = salvo[input.dataset.id];
         }
     });
+}
+
+// 3. LIMPAR APENAS A SESSÃO (RECOMEÇAR SEM SALVAR)
+function limparApenasRodada() {
+    if(confirm("Deseja limpar todos os placares e times desta rodada? Os títulos no ranking NÃO serão apagados.")) {
+        localStorage.removeItem(DB_SESSAO_TEMP);
+        document.querySelectorAll('input.score-input, input.t-input').forEach(input => input.value = "");
+        calcular();
+        alert("Rodada limpa!");
+    }
 }
 
 function atualizarJogadores() {
@@ -273,13 +283,14 @@ function atualizarJogadores() {
     document.getElementById('p1-select').innerHTML = opts;
     document.getElementById('p2-select').innerHTML = opts;
     if(players.length > 1) document.getElementById('p2-select').selectedIndex = 1;
-
-    gerarConfrontos();
-    carregarSessao(); // Recupera placares ao abrir/atualizar
+    gerarConfrontos(); 
+    carregarProgresso();
     renderHistorico(); 
     calcular(); 
     mostrarRivalidade();
 }
+
+function getHistoricoAtual() { return players.length === 2 ? historicoDuelo : historicoTorneio; }
 
 function gerarConfrontos() {
     let html = '';
@@ -298,7 +309,7 @@ function gerarConfrontos() {
     document.querySelectorAll('.placar, .t-input').forEach(i => {
         i.addEventListener('input', () => {
             calcular();
-            salvarSessao(); // Salva sempre que algo for digitado
+            salvarProgresso();
         });
     });
 }
@@ -358,13 +369,24 @@ function renderHistorico() {
 function exportarDados() {
     const backup = { torneio: historicoTorneio, duelo: historicoDuelo, rivalidade: hConfrontos };
     const code = btoa(JSON.stringify(backup));
-    navigator.clipboard.writeText(code).then(() => { alert("✅ Backup copiado!"); });
+    navigator.clipboard.writeText(code).then(() => { alert("✅ Backup copiado! Se quiser restaurar, cole um código aqui:"); });
+    const input = prompt("Cole um código de backup para restaurar (ou cancele para apenas copiar o atual):");
+    if(input && input.length > 50) {
+        try {
+            const res = JSON.parse(atob(input));
+            localStorage.setItem(DB_TORNEIO, JSON.stringify(res.torneio));
+            localStorage.setItem(DB_DUELO, JSON.stringify(res.duelo));
+            localStorage.setItem(DB_RIVALIDADE, JSON.stringify(res.rivalidade));
+            location.reload();
+        } catch(e) { alert("Código inválido!"); }
+    }
 }
 
 function abrirModal() {
     const hist = getHistoricoAtual();
     document.getElementById('campos-ajuste').innerHTML = players.map(j => `
-        <div class="adj-row"><span class="adj-name">${j}</span>
+        <div class="adj-row">
+            <span class="adj-name">${j}</span>
             <input type="number" id="adj-t-${j}" class="modal-input-field" value="${hist[j].titulos || 0}">
             <input type="number" id="adj-p-${j}" class="modal-input-field" value="${hist[j].pontos || 0}">
             <input type="number" id="adj-g-${j}" class="modal-input-field" value="${hist[j].gols || 0}">
@@ -391,7 +413,7 @@ function finalizarTorneio() {
     const hist = getHistoricoAtual();
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
     setTimeout(() => {
-        if(confirm(`Finalizar Torneio? Campeão: ${win}.`)) {
+        if(confirm(`Finalizar? Campeão: ${win}.`)) {
             hist[win].titulos++;
             players.forEach(p => { hist[p].pontos += s[p].p; hist[p].gols += s[p].gp; });
             document.querySelectorAll('.match-row').forEach(row => {
@@ -408,13 +430,13 @@ function finalizarTorneio() {
             });
             localStorage.setItem(players.length === 2 ? DB_DUELO : DB_TORNEIO, JSON.stringify(hist));
             localStorage.setItem(DB_RIVALIDADE, JSON.stringify(hConfrontos));
-            localStorage.removeItem(DB_SAVE_TEMP); // Limpa placares temporários após encerrar
+            localStorage.removeItem(DB_SESSAO_TEMP);
             location.reload();
         }
     }, 500);
 }
 
-function resetTotal() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
+function resetTotal() { if(confirm("CUIDADO: Isso vai apagar TODOS os títulos e histórico para sempre. Tem certeza?")) { localStorage.clear(); location.reload(); } }
 atualizarJogadores(); renderTop3();
 </script>
 </body>
