@@ -58,51 +58,66 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* GRID REFINADO DAS PARTIDAS */
+        /* MATCH DESIGN */
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         
         .match-row { 
             display: grid; 
-            grid-template-columns: 1fr 50px 25px 50px 1fr; /* Proporção ideal */
+            grid-template-columns: 1fr 48px 20px 48px 1fr; 
             align-items: center; 
-            gap: 10px; 
-            padding: 15px 0; 
+            gap: 8px; 
+            padding: 12px 0; 
             border-bottom: 1px solid rgba(255,255,255,0.05); 
         }
         .match-row:last-child { border-bottom: none; }
         
-        .player-side { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+        .player-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; width: 100%; }
         .player-side.left { text-align: right; align-items: flex-end; }
         .player-side.right { text-align: left; align-items: flex-start; }
 
-        .p-name { font-size: 0.75rem; font-weight: 800; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .p-name { font-size: 0.65rem; font-weight: 800; color: #fff; text-transform: uppercase; margin-bottom: 2px; }
         
-        .team-box { display: flex; gap: 6px; width: 100%; max-width: 120px; align-items: center; }
+        .team-box { display: flex; gap: 4px; width: 100%; align-items: center; }
+        
+        /* CAMPO DE TIME COM FONTE REDUZIDA */
         .t-input { 
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); 
-            color: #94a3b8; padding: 6px; border-radius: 5px; font-size: 0.65rem; 
-            width: 100%; outline: none; transition: 0.3s;
+            color: #fff; padding: 5px 1px; border-radius: 4px; 
+            font-size: 0.55rem; /* Fonte reduzida conforme pedido */
+            width: 100%; outline: none; 
+            text-align: center; /* Centralizado para melhor visualização */
+            text-overflow: ellipsis;
         }
-        .t-input:focus { border-color: var(--accent); color: white; }
+        .t-input:focus { border-color: var(--accent); }
 
-        .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1.1rem; filter: grayscale(1); transition: 0.2s; }
-        .btn-dice:active { transform: scale(1.3); filter: grayscale(0); }
+        .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; filter: grayscale(1); flex-shrink: 0; }
+        .btn-dice:active { transform: scale(1.2); filter: grayscale(0); }
 
-        /* PLACARES ROBUSTOS */
         .score-input { 
-            background: var(--accent); border: none; border-radius: 8px; color: white; 
-            height: 45px; font-size: 1.4rem; font-weight: 900; text-align: center; width: 100%; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3); outline: none;
+            background: var(--accent); border: none; border-radius: 6px; color: white; 
+            height: 40px; font-size: 1.2rem; font-weight: 900; text-align: center; width: 100%; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.75rem; opacity: 0.4; }
+        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.7rem; opacity: 0.4; }
 
         /* RIVALIDADE */
-        .rivalry-section { background: rgba(30, 41, 59, 0.9); border-radius: 12px; padding: 15px; margin: 20px 0; border: 1px solid var(--gold); }
-        .rivalry-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; margin-top: 15px; }
-        .rivalry-score { font-size: 2rem; font-weight: 900; color: var(--gold); }
+        .rivalry-section { 
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%);
+            border-radius: 16px; padding: 20px; margin: 25px 0; border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .rivalry-title { color: var(--gold); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; text-align: center; letter-spacing: 2px; margin-bottom: 20px; }
+        .rivalry-grid { display: grid; grid-template-columns: 1fr 100px 1fr; align-items: center; gap: 10px; }
+        .rival-card { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.03); }
+        .rival-card.win { border: 1px solid var(--gold); background: rgba(245, 158, 11, 0.05); }
+        .rivalry-score-big { font-size: 2.2rem; font-weight: 900; color: var(--gold); text-align: center; }
+        .dominance-bar-container { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px 0; overflow: hidden; display: flex; }
+        .dom-fill { height: 100%; transition: width 0.5s ease; }
+        .dom-p1 { background: var(--accent); }
+        .dom-p2 { background: var(--gold); }
+        .last-winner-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; font-weight: 900; text-transform: uppercase; }
 
-        /* BOTÕES FINAIS */
+        /* FOOTER */
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .footer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-bottom: 40px; }
         .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
@@ -110,8 +125,7 @@
         .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.6rem; cursor: pointer; font-weight: bold; }
         
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 10px; }
-        .modal-content { background: #1e293b; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 450px; max-height: 85vh; overflow-y: auto; }
-        .adj-header-grid { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 5px; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #475569; padding-bottom: 5px; }
+        .modal-content { background: #1e293b; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 450px; }
         .adj-row { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 5px; margin-bottom: 12px; align-items: center; }
         .modal-input-field { background: #0f172a; border: 1px solid #475569; color: white; padding: 8px 2px; border-radius: 8px; text-align: center; width: 100%; font-size: 0.8rem; box-sizing: border-box; }
     </style>
@@ -155,22 +169,25 @@
     <div id="lista-confrontos"></div>
 
     <div class="rivalry-section" id="rivalry-ui">
-        <div style="color:var(--gold); font-size:0.75rem; font-weight:bold; text-transform:uppercase; text-align:center">⚔️ Raio-X da Rivalidade</div>
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+        <div class="rivalry-title">⚔️ Raio-X da Rivalidade</div>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
             <select id="p1-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
             <span style="color: var(--gold); font-weight: bold; align-self: center;">VS</span>
             <select id="p2-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
         </div>
         <div class="rivalry-grid">
-            <div id="rival-p1-name" style="text-align:right; font-weight:800; font-size:0.75rem">-</div>
-            <div class="rivalry-score"><span id="rival-p1-wins">0</span> - <span id="rival-p2-wins">0</span></div>
-            <div id="rival-p2-name" style="text-align:left; font-weight:800; font-size:0.75rem">-</div>
+            <div id="card-p1" class="rival-card" style="text-align: right;"><span id="rival-p1-name" style="font-weight:900; font-size:0.8rem; color:white;">-</span></div>
+            <div class="rivalry-score-big"><span id="rival-p1-wins">0</span>:<span id="rival-p2-wins">0</span></div>
+            <div id="card-p2" class="rival-card" style="text-align: left;"><span id="rival-p2-name" style="font-weight:900; font-size:0.8rem; color:white;">-</span></div>
         </div>
-        <div id="rival-last-winner" style="font-size: 0.6rem; color: #94a3b8; margin-top: 12px; text-align:center">Último vencedor: <span id="val-ultimo">-</span></div>
+        <div class="dominance-bar-container">
+            <div id="bar-p1" class="dom-fill dom-p1" style="width: 50%;"></div>
+            <div id="bar-p2" class="dom-fill dom-p2" style="width: 50%;"></div>
+        </div>
+        <div style="text-align: center;"><div class="last-winner-badge">Último vencedor: <span id="val-ultimo">-</span></div></div>
     </div>
 
     <button class="btn-finish" onclick="finalizarTorneio()">Encerrar e Celebrar</button>
-    
     <div class="footer-actions">
         <button class="btn-clear-session" onclick="limparApenasRodada()">🧹 Limpar placares desta rodada</button>
         <div class="action-row">
@@ -184,7 +201,6 @@
 <div id="modal-ajuste">
     <div class="modal-content">
         <h2 style="color:var(--gold); font-size: 1rem; text-align:center; margin: 0 0 15px 0;">Configurações</h2>
-        <div class="adj-header-grid"><span>Jogador</span><span>Títulos</span><span>Pontos</span><span>Gols</span></div>
         <div id="campos-ajuste"></div>
         <div style="display:flex; gap:10px; margin-top:20px">
             <button class="btn-finish" style="flex:2; margin:0; padding:12px" onclick="salvarAjuste()">Salvar</button>
@@ -264,7 +280,7 @@ function carregarProgresso() {
 }
 
 function limparApenasRodada() {
-    if(confirm("Deseja limpar todos os placares e times desta rodada?")) {
+    if(confirm("Limpar placares e times desta rodada?")) {
         localStorage.removeItem(DB_SESSAO_TEMP);
         document.querySelectorAll('input.score-input, input.t-input').forEach(input => input.value = "");
         calcular();
@@ -313,13 +329,9 @@ function criarLinhaJogo(cIdx, i, j, k) {
                 <input class="t-input" data-id="${id}t1" placeholder="Time">
             </div>
         </div>
-        
         <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
-        
         <div class="x-divider">x</div>
-        
         <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
-        
         <div class="player-side right">
             <span class="p-name">${players[j]}</span>
             <div class="team-box">
@@ -361,6 +373,13 @@ function mostrarRivalidade() {
     document.getElementById('rival-p1-wins').innerText = dados[p1] || 0;
     document.getElementById('rival-p2-wins').innerText = dados[p2] || 0;
     document.getElementById('val-ultimo').innerText = dados.ultimo || "-";
+    const total = (dados[p1] || 0) + (dados[p2] || 0);
+    const perc1 = total === 0 ? 50 : ((dados[p1] || 0) / total) * 100;
+    const perc2 = 100 - perc1;
+    document.getElementById('bar-p1').style.width = perc1 + "%";
+    document.getElementById('bar-p2').style.width = perc2 + "%";
+    document.getElementById('card-p1').classList.toggle('win', (dados[p1] > dados[p2]));
+    document.getElementById('card-p2').classList.toggle('win', (dados[p2] > dados[p1]));
 }
 
 function renderHistorico() {
@@ -390,7 +409,7 @@ function exportarDados() {
 function abrirModal() {
     const hist = getHistoricoAtual();
     document.getElementById('campos-ajuste').innerHTML = players.map(j => `
-        <div class="adj-row"><span class="adj-name" style="color:#fff; font-size:0.75rem">${j}</span>
+        <div class="adj-row"><span style="color:#fff; font-size:0.75rem">${j}</span>
             <input type="number" id="adj-t-${j}" class="modal-input-field" value="${hist[j].titulos || 0}">
             <input type="number" id="adj-p-${j}" class="modal-input-field" value="${hist[j].pontos || 0}">
             <input type="number" id="adj-g-${j}" class="modal-input-field" value="${hist[j].gols || 0}">
