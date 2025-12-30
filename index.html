@@ -65,7 +65,21 @@
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .match-row { display: grid; grid-template-columns: 1fr 45px 20px 45px 1fr; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        
+        /* CORREÇÃO DO ALINHAMENTO DO X */
+        .match-row { 
+            display: grid; 
+            grid-template-columns: 1fr 45px 30px 45px 1fr; 
+            align-items: center; 
+            gap: 4px; 
+            padding: 12px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+        }
+        .match-row > div:nth-child(3) { 
+            display: flex; justify-content: center; align-items: center; 
+            color: var(--gold); font-weight: bold; font-size: 0.9rem;
+        }
+
         .score-input { background: var(--accent); border: none; border-radius: 6px; color: white; height: 38px; font-size: 1.2rem; font-weight: bold; text-align: center; width: 100%; }
         .t-input { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.2); color: #f8fafc; padding: 6px; border-radius: 6px; font-size: 0.65rem; width: 100%; margin-top: 4px; box-sizing: border-box; }
         .btn-dice { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 4px; padding: 4px; font-size: 0.6rem; margin-top: 5px; cursor: pointer; width: 100%; font-weight: bold; }
@@ -321,7 +335,7 @@ function criarLinhaJogo(cIdx, i, j, k) {
     return `<div class="match-row">
         <div style="text-align:right"><div style="font-size:0.75rem; font-weight:bold">${players[i]}</div><input class="t-input" data-id="${id}t1" placeholder="Time"><button class="btn-dice" onclick="sortearTime('${id}t1')">🎲 Sortear</button></div>
         <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
-        <div style="color:var(--gold); font-weight:bold; font-size:0.8rem">x</div>
+        <div>x</div>
         <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
         <div style="text-align:left"><div style="font-size:0.75rem; font-weight:bold">${players[j]}</div><input class="t-input" data-id="${id}t2" placeholder="Time"><button class="btn-dice" onclick="sortearTime('${id}t2')">🎲 Sortear</button></div>
     </div>`;
