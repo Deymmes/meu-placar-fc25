@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EA FC Pro - Ultimate Cloud Edition</title>
+    <title>EA FC Pro - Elite Edition Cloud</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -28,7 +27,6 @@
         .header-section { text-align: center; margin-bottom: 25px; }
         h1 { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 
-        /* SALAS */
         .room-badge { background: var(--gold); color: black; padding: 2px 14px; border-radius: 20px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: inline-block; margin-bottom: 8px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
 
         .section-title {
@@ -39,9 +37,17 @@
 
         .mode-badge { font-size: 0.6rem; background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; display: inline-block; }
 
-        .filter-section { background: var(--card-bg); border-radius: 12px; padding: 8px; margin: 10px 0; display: flex; gap: 6px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; scrollbar-width: none; }
+        .filter-section { 
+            background: var(--card-bg); border-radius: 12px; padding: 8px; margin: 10px 0; 
+            display: flex; gap: 6px; border: 1px solid rgba(255,255,255,0.1); 
+            overflow-x: auto; scrollbar-width: none;
+        }
         .filter-section::-webkit-scrollbar { display: none; }
-        .filter-chip { font-size: 0.6rem; background: rgba(15, 23, 42, 0.8); padding: 5px 10px; border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; font-weight: bold; white-space: nowrap; }
+        .filter-chip { 
+            font-size: 0.6rem; background: rgba(15, 23, 42, 0.8); padding: 5px 10px; 
+            border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; 
+            font-weight: bold; white-space: nowrap;
+        }
         .filter-chip.active { border-color: var(--gold); color: white; background: rgba(245, 158, 11, 0.4); }
         .filter-chip input { display: none; }
         .btn-all-toggle { font-size: 0.6rem; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; }
@@ -55,9 +61,15 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* GRID REFINADO - 18PX RESPIRO */
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .match-row { display: grid; grid-template-columns: 1fr 45px 25px 45px 1fr 35px; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); width: 100%; }
+        .match-row { 
+            display: grid; 
+            grid-template-columns: 1fr 45px 25px 45px 1fr 35px; 
+            align-items: center; 
+            padding: 15px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            width: 100%;
+        }
         .match-row:last-child { border-bottom: none; }
         
         .player-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
@@ -66,23 +78,39 @@
 
         .p-name { font-size: 0.8rem; font-weight: 800; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
         .team-box { display: flex; gap: 4px; width: 100%; max-width: 110px; align-items: center; }
-        .t-input { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 4px 0; border-radius: 4px; font-size: 0.65rem; width: 100%; outline: none; text-align: center; }
+        .t-input { 
+            background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); 
+            color: #fff; padding: 4px 0; border-radius: 4px; 
+            font-size: 0.65rem; width: 100%; outline: none; text-align: center;
+        }
+
         .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; filter: grayscale(1); flex-shrink: 0; }
-        .score-input { background: var(--accent); border: none; border-radius: 6px; color: white; height: 42px; font-size: 1.4rem; font-weight: 900; text-align: center; width: 45px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .score-input { 
+            background: var(--accent); border: none; border-radius: 6px; color: white; 
+            height: 42px; font-size: 1.4rem; font-weight: 900; text-align: center; width: 45px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
         .score-input:disabled { background: #334155; opacity: 0.6; box-shadow: none; }
+
         .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.75rem; opacity: 0.3; width: 25px; }
         .btn-lock { background: none; border: none; font-size: 1.1rem; cursor: pointer; opacity: 0.7; }
 
-        .rivalry-section { background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%); border-radius: 16px; padding: 20px; margin: 10px 0 25px 0; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .rivalry-section { 
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%);
+            border-radius: 16px; padding: 20px; margin: 10px 0 25px 0; border: 1px solid rgba(245, 158, 11, 0.3);
+        }
         .rivalry-grid { display: grid; grid-template-columns: 1fr 100px 1fr; align-items: center; gap: 10px; }
         .rival-card { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.03); }
         .rivalry-score-big { font-size: 2.2rem; font-weight: 900; color: var(--gold); text-align: center; }
         .dominance-bar-container { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px 0; overflow: hidden; display: flex; }
         .dom-fill { height: 100%; transition: width 0.5s ease; }
+        .dom-p1 { background: var(--accent); }
+        .dom-p2 { background: var(--gold); }
         .last-winner-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--gold); color: var(--gold); font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
 
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .footer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-bottom: 40px; }
+        .action-row { display: flex; gap: 5px; }
         .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.65rem; cursor: pointer; font-weight: bold; }
         
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 10px; }
@@ -96,8 +124,8 @@
 <div class="container" id="capture-area">
     <div class="header-section">
         <div class="room-badge" onclick="trocarSala()">SALA: <span id="label-sala">...</span></div>
-        <h1>Champions EA FC Pro Cloud</h1>
-        <div id="display-modo" class="mode-badge">Conectando Cloud...</div>
+        <h1>Champions EA FC Pro</h1>
+        <div id="display-modo" class="mode-badge">Conectando...</div>
         <div style="margin-bottom: 10px;">
             <input type="text" id="player-names" onchange="salvarPlayersNuvem()" value="João, Deymmes, Dario" style="background:transparent; border:none; border-bottom:2px solid var(--accent); color:white; text-align:center; font-size:1.1rem; font-weight:bold; width:80%; outline:none; padding: 5px;">
         </div>
@@ -109,7 +137,9 @@
             <label class="filter-chip"><input type="checkbox" value="esp" onchange="updateChip(this)">ESP</label>
             <label class="filter-chip"><input type="checkbox" value="ita" onchange="updateChip(this)">ITA</label>
             <label class="filter-chip"><input type="checkbox" value="ale" onchange="updateChip(this)">ALE</label>
+            <label class="filter-chip"><input type="checkbox" value="fra" onchange="updateChip(this)">FRA</label>
             <label class="filter-chip"><input type="checkbox" value="sel" onchange="updateChip(this)">SEL</label>
+            <label class="filter-chip"><input type="checkbox" value="out" onchange="updateChip(this)">OUT</label>
         </div>
     </div>
 
@@ -139,15 +169,15 @@
             <select id="p2-select" class="t-input" onchange="renderRivalidade()" style="width: 45%; height: 35px;"></select>
         </div>
         <div class="rivalry-grid">
-            <div id="rival-name-1" align="right" style="font-weight:900; font-size:0.95rem; color:white;">-</div>
+            <div id="card-p1" class="rival-card" style="text-align: right;"><span id="rival-p1-name" style="font-weight:900; font-size:0.95rem; color:white;">-</span></div>
             <div class="rivalry-score-big"><span id="rival-v-1">0</span>:<span id="rival-v-2">0</span></div>
-            <div id="rival-name-2" align="left" style="font-weight:900; font-size:0.95rem; color:white;">-</div>
+            <div id="card-p2" class="rival-card" style="text-align: left;"><span id="rival-p2-name" style="font-weight:900; font-size:0.95rem; color:white;">-</span></div>
         </div>
         <div class="dominance-bar-container">
-            <div id="bar-1" class="dom-fill" style="background:var(--accent); width: 50%;"></div>
-            <div id="bar-2" class="dom-fill" style="background:var(--gold); width: 50%;"></div>
+            <div id="bar-1" class="dom-fill dom-p1" style="width: 50%;"></div>
+            <div id="bar-2" class="dom-fill dom-p2" style="width: 50%;"></div>
         </div>
-        <div style="text-align: center;"><div class="last-winner-badge">Último: <span id="val-ultimo">-</span></div></div>
+        <div style="text-align: center;"><div class="last-winner-badge">Último vencedor: <span id="val-ultimo">-</span></div></div>
     </div>
 
     <button class="btn-finish" onclick="finalizarTurno()">Encerrar e Sincronizar Tudo</button>
@@ -161,7 +191,7 @@
 
 <div id="modal-ajuste">
     <div class="modal-content">
-        <h2 style="color:var(--gold); text-align:center;">Ajustes Históricos</h2>
+        <h2 style="color:var(--gold); text-align:center; margin: 0 0 15px 0;">Configurações</h2>
         <div id="campos-ajuste"></div>
         <div style="display:flex; gap:10px; margin-top:20px">
             <button class="btn-finish" style="flex:2; margin:0;" onclick="salvarAjusteAdmin()">Salvar</button>
@@ -188,8 +218,10 @@ const timesPool = {
     esp: ["Real Madrid", "Barcelona", "Atlético Madrid"],
     ita: ["Inter Milão", "Juventus", "AC Milan"],
     ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund"],
+    fra: ["PSG", "Mônaco", "Marseille"],
     sel: ["Brasil 🇧🇷", "Espanha 🇪🇸", "França 🇫🇷", "Argentina 🇦🇷"],
-    top3: ["Real Madrid", "Man. City", "Bayern München", "PSG", "Inter Milão"]
+    top3: ["Real Madrid", "Man. City", "Bayern München", "PSG", "Inter Milão"],
+    out: ["Inter Miami", "Benfica", "Porto", "Ajax"]
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -199,24 +231,20 @@ const urlParams = new URLSearchParams(window.location.search);
 let salaAtual = urlParams.get('sala') || localStorage.getItem('FC_LAST_ROOM') || 'Resenha';
 document.getElementById('label-sala').innerText = salaAtual;
 
-let cloudData = { players: "João, Deymmes, Dario", ranking: {}, jogos: {}, rivalidade: {} };
+let cloudData = { players: "João, Deymmes, Dario", ranking_torneio: {}, ranking_duelo: {}, jogos: {}, rivalidade: {} };
 
-// --- SINCRONIZAÇÃO CLOUD ---
 db.ref('salas/' + salaAtual).on('value', (snap) => {
     const d = snap.val();
-    if(d) {
-        cloudData = d;
-        document.getElementById('player-names').value = d.players || "João, Deymmes, Dario";
-    }
-    document.getElementById('display-modo').innerText = "Cloud Online";
+    if(d) cloudData = d;
     atualizarInterface();
 });
 
 function trocarSala() {
-    const n = prompt("Nome da Sala (sem espaços):", salaAtual);
+    const n = prompt("Nome da Sala:", salaAtual);
     if(n) {
-        localStorage.setItem('FC_LAST_ROOM', n.replace(/\s+/g, ''));
-        window.location.search = "?sala=" + n.replace(/\s+/g, '');
+        const salaLimpa = n.replace(/\s+/g, '');
+        localStorage.setItem('FC_LAST_ROOM', salaLimpa);
+        window.location.search = "?sala=" + salaLimpa;
     }
 }
 
@@ -229,60 +257,61 @@ function toggleTodos() {
 
 function atualizarInterface() {
     const pList = document.getElementById('player-names').value.split(',').map(n => n.trim()).filter(n => n !== "");
-    const hist = cloudData.ranking || {};
+    const isDuelo = pList.length === 2;
+    document.getElementById('display-modo').innerText = isDuelo ? "Modo Duelo (X1)" : "Modo Torneio";
     
-    // Rankings
+    // BANCO DE DADOS SEPARADO: Se 2 jogadores, usa ranking_duelo. Se +2, usa ranking_torneio.
+    const hist = isDuelo ? (cloudData.ranking_duelo || {}) : (cloudData.ranking_torneio || {});
+    
     const r = (f) => [...pList].sort((a,b) => (hist[b]?.[f]||0) - (hist[a]?.[f]||0)).map(p => `
         <div class="rank-item"><span>${p}</span><b>${hist[p]?.[f]||0}</b></div>`).join('');
     document.getElementById('hist-titulos').innerHTML = r('titulos');
     document.getElementById('hist-pontos').innerHTML = r('pontos');
     document.getElementById('hist-gols').innerHTML = r('gols');
 
-    // Selects
     const opts = pList.map(p => `<option value="${p}">${p}</option>`).join('');
     document.getElementById('p1-select').innerHTML = opts; document.getElementById('p2-select').innerHTML = opts;
+    if(pList.length > 1 && document.getElementById('p2-select').selectedIndex === 0) document.getElementById('p2-select').selectedIndex = 1;
 
-    // Jogos
     let html = '';
     const jData = cloudData.jogos || {};
-    for(let i=0; i<pList.length; i++) {
-        for(let j=i+1; j<pList.length; j++) {
-            const id = `j_${i}_${j}`;
-            const jg = jData[id] || { g1: "", g2: "", t1: "", t2: "", tentativas: 0 };
-            const travado = jg.tentativas >= 2;
-            html += `
-            <div class="match-row">
-                <div class="player-side left">
-                    <span class="p-name">${pList[i]}</span>
-                    <div class="team-box">
-                        <button class="btn-dice" onclick="sortearTime('${id}t1')">🎲</button>
-                        <input class="t-input" id="${id}t1" placeholder="Time" value="${jg.t1||''}" onchange="salvarTimeNuvem('${id}',1,this.value)">
-                    </div>
-                </div>
-                <input type="number" class="score-input" id="${id}s1" value="${jg.g1}" ${travado?'disabled':''} oninput="calcularTabela()">
-                <div class="x-divider">x</div>
-                <input type="number" class="score-input" id="${id}s2" value="${jg.g2}" ${travado?'disabled':''} oninput="calcularTabela()">
-                <div class="player-side right">
-                    <span class="p-name">${pList[j]}</span>
-                    <div class="team-box">
-                        <input class="t-input" id="${id}t2" placeholder="Time" value="${jg.t2||''}" onchange="salvarTimeNuvem('${id}',2,this.value)">
-                        <button class="btn-dice" onclick="sortearTime('${id}t2')">🎲</button>
-                    </div>
-                </div>
-                <button class="btn-lock" onclick="confirmarJogo('${id}')">${travado?'🔒':'🔓'}</button>
-            </div>`;
+    const turnos = ["🕹️ Turno 1", "🕹️ Turno 2", "🕹️ Turno 3"];
+    
+    turnos.forEach((cat, cIdx) => {
+        html += `<div class="match-section"><div style="text-align:center; font-size:0.65rem; color:var(--gold); margin-bottom:12px; font-weight:900; text-transform:uppercase;">${cat}</div>`;
+        if (isDuelo) {
+            for (let k = 1; k <= 2; k++) html += criarLinhaJogoCloud(cIdx, 0, 1, k, pList, jData);
+        } else {
+            for (let i = 0; i < pList.length; i++) {
+                for (let j = i + 1; j < pList.length; j++) html += criarLinhaJogoCloud(cIdx, i, j, 0, pList, jData);
+            }
         }
-    }
+        html += `</div>`;
+    });
     document.getElementById('lista-confrontos').innerHTML = html;
     calcularTabela(); renderRivalidade();
 }
 
-function salvarTimeNuvem(id, pNum, val) { db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ['t'+pNum]: val }); }
+function criarLinhaJogoCloud(cIdx, i, j, k, pList, jData) {
+    const id = `c${cIdx}_p${i}_p${j}_k${k}`;
+    const jg = jData[id] || { g1: "", g2: "", t1: "", t2: "", tentativas: 0 };
+    const travado = jg.tentativas >= 2;
+    return `<div class="match-row">
+        <div class="player-side left"><span class="p-name">${pList[i]}</span><div class="team-box"><button class="btn-dice" onclick="sortearTime('${id}t1')">🎲</button><input class="t-input" id="${id}t1" value="${jg.t1||''}" onchange="salvarTime('${id}',1,this.value)"></div></div>
+        <input type="number" class="score-input placar" id="${id}s1" value="${jg.g1}" ${travado?'disabled':''} oninput="calcularTabela()">
+        <div class="x-divider">x</div>
+        <input type="number" class="score-input placar" id="${id}s2" value="${jg.g2}" ${travado?'disabled':''} oninput="calcularTabela()">
+        <div class="player-side right"><span class="p-name">${pList[j]}</span><div class="team-box"><input class="t-input" id="${id}t2" value="${jg.t2||''}" onchange="salvarTime('${id}',2,this.value)"><button class="btn-dice" onclick="sortearTime('${id}t2')">🎲</button></div></div>
+        <button class="btn-lock" onclick="confirmarJogo('${id}')">${travado?'🔒':'🔓'}</button>
+    </div>`;
+}
+
+function salvarTime(id, p, v) { db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ['t'+p]: v }); }
 
 function sortearTime(inputId) {
     const ativos = document.querySelectorAll('.filter-chip.active input');
     let pool = [];
-    ativos.forEach(a => { if(timesPool[a.value]) pool = pool.concat(timesPool[a.value]); });
+    ativos.forEach(a => pool = pool.concat(timesPool[a.value] || []));
     const sorteado = (pool.length > 0 ? pool : timesPool.top3)[Math.floor(Math.random() * (pool.length || 5))];
     document.getElementById(inputId).value = sorteado;
     document.getElementById(inputId).dispatchEvent(new Event('change'));
@@ -291,10 +320,10 @@ function sortearTime(inputId) {
 function confirmarJogo(id) {
     const g1 = document.getElementById(id+'s1').value;
     const g2 = document.getElementById(id+'s2').value;
-    if(g1 === "" || g2 === "") return alert("Preencha o placar!");
+    if(g1 === "" || g2 === "") return;
     db.ref(`salas/${salaAtual}/jogos/${id}`).once('value', (s) => {
         const d = s.val() || { tentativas: 0 };
-        if(d.tentativas >= 2) return alert("Trancado!");
+        if(d.tentativas >= 2) return;
         if(confirm(`Confirmar? (Tentativa ${d.tentativas+1}/2)`)) {
             db.ref(`salas/${salaAtual}/jogos/${id}`).update({ g1: parseInt(g1), g2: parseInt(g2), tentativas: d.tentativas + 1 });
         }
@@ -306,7 +335,7 @@ function calcularTabela() {
     let t = {}; pList.forEach(p => t[p] = { p: 0, v: 0, e: 0, d: 0, sg: 0, gp: 0 });
     document.querySelectorAll('.match-row').forEach(row => {
         const pNames = row.querySelectorAll('.p-name');
-        const scores = row.querySelectorAll('.score-input');
+        const scores = row.querySelectorAll('.placar');
         const g1 = scores[0].value !== "" ? parseInt(scores[0].value) : null;
         const g2 = scores[1].value !== "" ? parseInt(scores[1].value) : null;
         if(g1 !== null && g2 !== null) {
@@ -329,15 +358,12 @@ function renderRivalidade() {
     if(!p1 || !p2 || p1 === p2) return;
     const chave = [p1, p2].sort().join('_vs_');
     const riv = (cloudData.rivalidade || {})[chave] || { [p1]: 0, [p2]: 0, ultimo: "-" };
-    document.getElementById('rival-name-1').innerText = p1;
-    document.getElementById('rival-name-2').innerText = p2;
-    document.getElementById('rival-v-1').innerText = riv[p1] || 0;
-    document.getElementById('rival-v-2').innerText = riv[p2] || 0;
+    document.getElementById('rival-p1-name').innerText = p1; document.getElementById('rival-p2-name').innerText = p2;
+    document.getElementById('rival-v-1').innerText = riv[p1] || 0; document.getElementById('rival-v-2').innerText = riv[p2] || 0;
     document.getElementById('val-ultimo').innerText = riv.ultimo || "-";
     const total = (riv[p1]||0) + (riv[p2]||0);
     const perc = total === 0 ? 50 : (riv[p1]/total)*100;
-    document.getElementById('bar-1').style.width = perc + "%";
-    document.getElementById('bar-2').style.width = (100 - perc) + "%";
+    document.getElementById('bar-1').style.width = perc + "%"; document.getElementById('bar-2').style.width = (100 - perc) + "%";
 }
 
 function salvarPlayersNuvem() { if(confirm("Resetar rodada?")) db.ref(`salas/${salaAtual}`).update({ players: document.getElementById('player-names').value, jogos: null }); }
@@ -349,31 +375,36 @@ function finalizarTurno() {
     const win = rows[0].cells[1].innerText;
     const pass = prompt("Senha Master:");
     if(pass !== MASTER_KEY) return;
-    const hist = cloudData.ranking || {};
+    
     const pList = document.getElementById('player-names').value.split(',').map(n => n.trim()).filter(n => n !== "");
+    const dbPath = pList.length === 2 ? 'ranking_duelo' : 'ranking_torneio';
+    const hist = cloudData[dbPath] || {};
+    
     pList.forEach(p => { if(!hist[p]) hist[p] = { titulos: 0, pontos: 0, gols: 0 }; hist[p].pontos += s[p].p; hist[p].gols += s[p].gp; });
     hist[win].titulos++;
-    const jData = cloudData.jogos || {};
+    
     let riv = cloudData.rivalidade || {};
-    Object.entries(jData).forEach(([id, jg]) => {
+    Object.entries(cloudData.jogos || {}).forEach(([id, jg]) => {
         if(jg.g1 !== "" && jg.g2 !== "" && jg.g1 !== jg.g2) {
-            const parts = id.split('_');
-            const n1 = pList[parts[1]]; const n2 = pList[parts[2]];
+            const pts = id.split('_');
+            const n1 = pList[pts[1].replace('p','')]; const n2 = pList[pts[2].replace('p','')];
             const vencedor = jg.g1 > jg.g2 ? n1 : n2;
             const chave = [n1, n2].sort().join('_vs_');
             if(!riv[chave]) riv[chave] = { [n1]: 0, [n2]: 0 };
             riv[chave][vencedor]++; riv[chave].ultimo = vencedor;
         }
     });
+    
     confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-    db.ref(`salas/${salaAtual}`).update({ ranking: hist, rivalidade: riv, jogos: null });
+    db.ref(`salas/${salaAtual}`).update({ [dbPath]: hist, rivalidade: riv, jogos: null });
 }
 
 function abrirAdmin() {
     const pass = prompt("Senha Admin:");
     if(pass !== MASTER_KEY) return;
-    const hist = cloudData.ranking || {};
     const pList = document.getElementById('player-names').value.split(',').map(n => n.trim()).filter(n => n !== "");
+    const dbPath = pList.length === 2 ? 'ranking_duelo' : 'ranking_torneio';
+    const hist = cloudData[dbPath] || {};
     document.getElementById('campos-ajuste').innerHTML = pList.map(p => `
         <div class="adj-row"><span>${p}</span>
             <input type="number" id="adj-t-${p}" class="modal-input-field" value="${hist[p]?.titulos||0}">
@@ -385,9 +416,10 @@ function abrirAdmin() {
 function fecharAdmin() { document.getElementById('modal-ajuste').style.display = 'none'; }
 function salvarAjusteAdmin() {
     const pList = document.getElementById('player-names').value.split(',').map(n => n.trim()).filter(n => n !== "");
-    let novo = cloudData.ranking || {};
+    const dbPath = pList.length === 2 ? 'ranking_duelo' : 'ranking_torneio';
+    let novo = cloudData[dbPath] || {};
     pList.forEach(p => { novo[p] = { titulos: parseInt(document.getElementById(`adj-t-${p}`).value)||0, pontos: parseInt(document.getElementById(`adj-p-${p}`).value)||0, gols: parseInt(document.getElementById(`adj-g-${p}`).value)||0 }; });
-    db.ref(`salas/${salaAtual}/ranking`).set(novo); fecharAdmin();
+    db.ref(`salas/${salaAtual}/${dbPath}`).set(novo); fecharAdmin();
 }
 function resetTotalSala() { if(confirm("APAGAR TUDO?")) db.ref(`salas/${salaAtual}`).remove(); }
 </script>
