@@ -48,7 +48,6 @@
         .filter-chip input { display: none; }
         .btn-all-toggle { font-size: 0.6rem; background: var(--gold); color: black; padding: 5px 10px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; }
 
-        /* RANKINGS */
         .rankings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .rank-card { background: var(--card-bg); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); }
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
@@ -58,51 +57,44 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* MATCH DESIGN RENOVADO */
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        /* AJUSTE DE ESPAÇAMENTO NAS LINHAS DE JOGO */
         .match-row { 
             display: grid; 
             grid-template-columns: 1fr 45px 30px 45px 1fr; 
             align-items: center; 
-            gap: 5px; 
-            padding: 10px 0; 
+            gap: 12px; /* Aumentei o gap geral para dar respiro */
+            padding: 12px 0; 
             border-bottom: 1px solid rgba(255,255,255,0.05); 
         }
         .match-row:last-child { border-bottom: none; }
         
-        .player-side { display: flex; flex-direction: column; gap: 4px; }
+        .player-side { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
         .player-side.left { text-align: right; align-items: flex-end; }
         .player-side.right { text-align: left; align-items: flex-start; }
 
-        .p-name { font-size: 0.75rem; font-weight: 800; color: #fff; text-transform: uppercase; }
+        .p-name { font-size: 0.7rem; font-weight: 800; color: #fff; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
         
-        .team-box { display: flex; gap: 4px; width: 100%; max-width: 100px; align-items: center; }
+        .team-box { display: flex; gap: 4px; width: 100%; max-width: 110px; align-items: center; }
         .t-input { 
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); 
-            color: #94a3b8; padding: 4px 6px; border-radius: 4px; font-size: 0.6rem; 
-            width: 100%; outline: none; transition: 0.3s;
+            color: #94a3b8; padding: 5px 6px; border-radius: 4px; font-size: 0.6rem; 
+            width: 100%; outline: none;
         }
-        .t-input:focus { border-color: var(--accent); color: white; }
 
-        .btn-dice { 
-            background: none; border: none; cursor: pointer; padding: 0; 
-            font-size: 0.9rem; filter: grayscale(1); transition: 0.2s; 
-        }
+        .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; filter: grayscale(1); }
         .btn-dice:active { transform: scale(1.2); filter: grayscale(0); }
 
         .score-input { 
             background: var(--accent); border: none; border-radius: 6px; color: white; 
-            height: 38px; font-size: 1.2rem; font-weight: 900; text-align: center; width: 100%; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            height: 40px; font-size: 1.3rem; font-weight: 900; text-align: center; width: 100%; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        .x-divider { 
-            display: flex; justify-content: center; align-items: center; 
-            color: var(--gold); font-weight: 900; font-size: 0.8rem; opacity: 0.6;
-        }
+        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.8rem; opacity: 0.4; }
 
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
-        
         .footer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-bottom: 40px; }
         .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
         .action-row { display: flex; gap: 5px; }
@@ -163,11 +155,11 @@
             <select id="p2-select" class="t-input" onchange="mostrarRivalidade()" style="width: 45%; height: 35px;"></select>
         </div>
         <div class="rivalry-grid">
-            <div id="rival-p1-name" style="text-align:right; font-weight:800; font-size:0.75rem">-</div>
+            <div id="rival-p1-name" style="text-align:right; font-weight:800; font-size:0.7rem">-</div>
             <div class="rivalry-score"><span id="rival-p1-wins">0</span> - <span id="rival-p2-wins">0</span></div>
-            <div id="rival-p2-name" style="text-align:left; font-weight:800; font-size:0.75rem">-</div>
+            <div id="rival-p2-name" style="text-align:left; font-weight:800; font-size:0.7rem">-</div>
         </div>
-        <div id="rival-last-winner" style="font-size: 0.65rem; color: #94a3b8; margin-top: 12px; text-align:center">Último vencedor: <span id="val-ultimo">-</span></div>
+        <div id="rival-last-winner" style="font-size: 0.6rem; color: #94a3b8; margin-top: 12px; text-align:center">Último vencedor: <span id="val-ultimo">-</span></div>
     </div>
 
     <button class="btn-finish" onclick="finalizarTorneio()">Encerrar e Celebrar</button>
@@ -314,13 +306,9 @@ function criarLinhaJogo(cIdx, i, j, k) {
                 <input class="t-input" data-id="${id}t1" placeholder="Time">
             </div>
         </div>
-        
         <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
-        
         <div class="x-divider">x</div>
-        
         <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
-        
         <div class="player-side right">
             <span class="p-name">${players[j]}</span>
             <div class="team-box">
@@ -375,8 +363,8 @@ function renderHistorico() {
 function exportarDados() {
     const backup = { torneio: historicoTorneio, duelo: historicoDuelo, rivalidade: hConfrontos };
     const code = btoa(JSON.stringify(backup));
-    navigator.clipboard.writeText(code).then(() => { alert("✅ Backup copiado! Se quiser restaurar, cole um código aqui:"); });
-    const input = prompt("Cole um código de backup para restaurar:");
+    navigator.clipboard.writeText(code).then(() => { alert("✅ Backup copiado!"); });
+    const input = prompt("Cole um código para restaurar:");
     if(input && input.length > 50) {
         try {
             const res = JSON.parse(atob(input));
@@ -441,7 +429,7 @@ function finalizarTorneio() {
     }, 500);
 }
 
-function resetTotal() { if(confirm("CUIDADO: Isso vai apagar TODOS os títulos e histórico para sempre.")) { localStorage.clear(); location.reload(); } }
+function resetTotal() { if(confirm("CUIDADO: Isso vai apagar TODOS os títulos e histórico.")) { localStorage.clear(); location.reload(); } }
 atualizarJogadores();
 </script>
 </body>
