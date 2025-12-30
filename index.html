@@ -59,12 +59,10 @@
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
         .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
+        .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         th { font-size: 0.55rem; color: #94a3b8; text-transform: uppercase; padding-bottom: 8px; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 6px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
 
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .match-row { display: grid; grid-template-columns: 1fr 45px 20px 45px 1fr; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
@@ -77,7 +75,10 @@
         .rivalry-score { font-size: 2rem; font-weight: 900; color: var(--gold); }
 
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
-        .footer-actions { display: flex; gap: 5px; margin-top: 15px; padding-bottom: 40px; }
+        
+        .footer-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-bottom: 40px; }
+        .btn-clear-session { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
+        .action-row { display: flex; gap: 5px; }
         .btn-small { flex: 1; padding: 10px 5px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: white; font-size: 0.6rem; cursor: pointer; font-weight: bold; }
         
         #modal-ajuste { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 10px; }
@@ -141,7 +142,6 @@
             <tbody id="corpo-tabela"></tbody>
         </table>
     </div>
-    <button class="btn-clear-session" onclick="limparApenasRodada()">🧹 Limpar placares desta rodada</button>
 
     <div id="lista-confrontos"></div>
 
@@ -161,10 +161,15 @@
     </div>
 
     <button class="btn-finish" onclick="finalizarTorneio()">Encerrar e Celebrar</button>
+    
     <div class="footer-actions">
-        <button class="btn-small" onclick="abrirModal()">⚙️ Ajustar</button>
-        <button class="btn-small" onclick="exportarDados()">📥 Backup</button>
-        <button class="btn-small" style="color:#ef4444" onclick="resetTotal()">🗑️ Reset TOTAL</button>
+        <button class="btn-clear-session" onclick="limparApenasRodada()">🧹 Limpar placares desta rodada</button>
+        
+        <div class="action-row">
+            <button class="btn-small" onclick="abrirModal()">⚙️ Ajustar</button>
+            <button class="btn-small" onclick="exportarDados()">📥 Backup</button>
+            <button class="btn-small" style="color:#ef4444" onclick="resetTotal()">🗑️ Reset TOTAL</button>
+        </div>
     </div>
 </div>
 
@@ -220,7 +225,6 @@ function renderTop3() {
     document.getElementById('top-3-display').innerHTML = lista.map((time, i) => `<div class="team-item"><span class="team-pos">${i+1}º</span>${time}</div>`).join('');
 }
 
-// 1. SORTEIO SEM REPETIÇÃO
 function sortearTime(id) {
     const inputsFiltro = document.querySelectorAll('#filter-ui input:checked');
     let listaSorteio = [];
@@ -244,7 +248,6 @@ function toggleTodos() {
     inputs.forEach(i => { i.checked = algumOff; updateChip(i); });
 }
 
-// 2. AUTO-SAVE (SESSÃO TEMPORÁRIA)
 function salvarProgresso() {
     const dadosSessao = {};
     document.querySelectorAll('input.score-input, input.t-input').forEach(input => {
@@ -263,7 +266,6 @@ function carregarProgresso() {
     });
 }
 
-// 3. LIMPAR APENAS A SESSÃO (RECOMEÇAR SEM SALVAR)
 function limparApenasRodada() {
     if(confirm("Deseja limpar todos os placares e times desta rodada? Os títulos no ranking NÃO serão apagados.")) {
         localStorage.removeItem(DB_SESSAO_TEMP);
