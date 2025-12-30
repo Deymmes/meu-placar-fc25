@@ -58,48 +58,43 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* MATCH DESIGN */
+        /* MATCH DESIGN - CORREÇÃO DEFINITIVA DE ESPAÇAMENTO */
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         
         .match-row { 
             display: grid; 
-            grid-template-columns: 1fr 48px 20px 48px 1fr; 
+            grid-template-columns: 1fr 45px 25px 45px 1fr; /* Colunas fixas no centro */
             align-items: center; 
-            gap: 8px; 
             padding: 12px 0; 
             border-bottom: 1px solid rgba(255,255,255,0.05); 
         }
         .match-row:last-child { border-bottom: none; }
         
-        .player-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; width: 100%; }
-        .player-side.left { text-align: right; align-items: flex-end; }
-        .player-side.right { text-align: left; align-items: flex-start; }
+        .player-side { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        
+        /* Respiro entre o placar e o conteúdo do jogador */
+        .player-side.left { text-align: right; align-items: flex-end; padding-right: 12px; }
+        .player-side.right { text-align: left; align-items: flex-start; padding-left: 12px; }
 
-        .p-name { font-size: 0.65rem; font-weight: 800; color: #fff; text-transform: uppercase; margin-bottom: 2px; }
+        .p-name { font-size: 0.65rem; font-weight: 800; color: #fff; text-transform: uppercase; }
         
-        .team-box { display: flex; gap: 4px; width: 100%; align-items: center; }
+        .team-box { display: flex; gap: 4px; width: 100%; max-width: 100px; align-items: center; }
         
-        /* CAMPO DE TIME COM FONTE REDUZIDA */
         .t-input { 
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); 
-            color: #fff; padding: 5px 1px; border-radius: 4px; 
-            font-size: 0.55rem; /* Fonte reduzida conforme pedido */
-            width: 100%; outline: none; 
-            text-align: center; /* Centralizado para melhor visualização */
-            text-overflow: ellipsis;
+            color: #ccc; padding: 4px 2px; border-radius: 4px; 
+            font-size: 0.5rem; width: 100%; outline: none; text-align: center;
         }
-        .t-input:focus { border-color: var(--accent); }
 
-        .btn-dice { background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; filter: grayscale(1); flex-shrink: 0; }
+        .btn-dice { background: none; border: none; cursor: pointer; font-size: 0.9rem; filter: grayscale(1); flex-shrink: 0; }
         .btn-dice:active { transform: scale(1.2); filter: grayscale(0); }
 
         .score-input { 
             background: var(--accent); border: none; border-radius: 6px; color: white; 
-            height: 40px; font-size: 1.2rem; font-weight: 900; text-align: center; width: 100%; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            height: 38px; font-size: 1.2rem; font-weight: 900; text-align: center; width: 100%; 
         }
 
-        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.7rem; opacity: 0.4; }
+        .x-divider { display: flex; justify-content: center; align-items: center; color: var(--gold); font-weight: 900; font-size: 0.7rem; opacity: 0.3; }
 
         /* RIVALIDADE */
         .rivalry-section { 
@@ -329,9 +324,11 @@ function criarLinhaJogo(cIdx, i, j, k) {
                 <input class="t-input" data-id="${id}t1" placeholder="Time">
             </div>
         </div>
+
         <input type="number" class="score-input placar" data-p="${players[i]}" data-id="${id}s1">
         <div class="x-divider">x</div>
         <input type="number" class="score-input placar" data-p="${players[j]}" data-id="${id}s2">
+        
         <div class="player-side right">
             <span class="p-name">${players[j]}</span>
             <div class="team-box">
