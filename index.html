@@ -20,34 +20,44 @@
         body {
             font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg);
             color: var(--text); padding: 0; margin: 0; min-height: 100vh;
+            overflow: hidden; /* Evita scroll na tela de boas-vindas */
         }
 
-        /* TELA DE BOAS-VINDAS */
+        /* TELA DE BOAS-VINDAS - ESTILO RECUPERADO */
         #welcome-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
-            background: url('bgtelainicial.JPG') no-repeat center center;
+            background: url('bgtelainicial.jpg') no-repeat center center;
             background-size: cover;
             transition: opacity 0.8s ease;
         }
-        #welcome-screen::before {
+
+        /* Overlay escuro para dar contraste */
+        #welcome-screen::after {
             content: ""; position: absolute; inset: 0;
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.95) 100%);
-            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.5); /* Escurece um pouco a imagem */
+            z-index: 1;
         }
+
         .welcome-card {
-            position: relative; width: 90%; max-width: 400px;
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px); border-radius: 24px; padding: 30px; text-align: center;
+            position: relative; z-index: 2;
+            width: 85%; max-width: 320px;
+            /* O EFEITO DE VIDRO QUE VOCÊ GOSTOU */
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 28px; padding: 30px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
+
         .welcome-btn {
-            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
             font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 12px; transition: 0.3s;
         }
-        .last-room-box { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
 
         /* APP PRINCIPAL */
-        .main-app { padding: 10px; display: none; opacity: 0; transition: opacity 0.5s; }
+        .main-app { padding: 10px; display: none; opacity: 0; transition: opacity 0.5s; overflow-y: auto; height: 100vh; }
         .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
         
         .header-section { text-align: center; margin-bottom: 20px; padding-top: 10px; }
@@ -91,12 +101,10 @@
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
 
-        /* ADMIN PANEL */
         .admin-section { background: rgba(239, 68, 68, 0.1); border: 1px dashed var(--danger); border-radius: 12px; padding: 15px; margin: 20px 0; display: none; }
         .admin-edit-row { display: grid; grid-template-columns: 1fr 50px 50px 50px; gap: 5px; margin-bottom: 8px; align-items: center; }
         .admin-input { background: #000; border: 1px solid #444; color: var(--gold); text-align: center; padding: 5px; font-size: 0.7rem; border-radius: 4px; width: 100%; }
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn-admin { padding: 8px; font-size: 0.7rem; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase; }
+        .last-room-box { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -105,14 +113,15 @@
 
 <div id="welcome-screen">
     <div class="welcome-card">
-        <h2 style="font-weight:900; color:white; text-transform:uppercase; margin:0;">EA FC Pro</h2>
-        <p style="color:#94a3b8; font-size:0.8rem; margin:10px 0 25px;">Onde os mitos se encontram.</p>
+        <h2 style="font-weight:900; color:white; text-transform:uppercase; margin:0; letter-spacing: 2px;">EA FC Pro</h2>
+        <p style="color:#cbd5e1; font-size:0.8rem; margin:10px 0 25px;">Onde os mitos se encontram.</p>
+        
         <button class="welcome-btn" style="background:var(--gold); color:black;" onclick="novaSala()">CRIAR NOVA SALA</button>
         <button class="welcome-btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);" onclick="trocarSala()">ENTRAR EM SALA</button>
         
         <div id="last-room-container" class="last-room-box" style="display:none;">
-            <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:10px;">Deseja continuar de onde parou?</p>
-            <button id="btn-resume" class="welcome-btn" style="background:var(--accent); color:white;"></button>
+            <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:10px;">Continuar de onde parou?</p>
+            <button id="btn-resume" class="welcome-btn" style="background:var(--accent); color:white; margin-bottom:0;"></button>
         </div>
     </div>
 </div>
@@ -120,12 +129,12 @@
 <div id="main-app" class="main-app">
     <div class="container">
         <div class="header-section">
-            <p id="label-sala-topo" style="font-size:0.6rem; color:var(--gold); margin:0; text-transform:uppercase; letter-spacing:2px; cursor:pointer;">SALA: ...</p>
+            <p id="label-sala-topo" style="font-size:0.65rem; color:var(--gold); margin:0; text-transform:uppercase; letter-spacing:2px; font-weight: bold; cursor:pointer;">SALA: ...</p>
             <h1 id="mode-title-display" class="mode-title">Torneio Champions</h1>
             
             <div class="participants-row">
-                <input type="text" id="player-names" onchange="salvarPlayersNuvem()" placeholder="Ex: João, Deymmes" style="background:transparent; border:none; border-bottom:1px solid var(--accent); color:white; font-size:1rem; font-weight:bold; width:80%; text-align:center; outline:none;">
-                <button onclick="sairDaSala()" style="background:none; border:none; color:var(--danger); font-size:0.65rem; font-weight:bold; cursor:pointer; text-transform:uppercase;">[ Voltar para o Início ]</button>
+                <input type="text" id="player-names" onchange="salvarPlayersNuvem()" placeholder="Ex: João, Deymmes" style="background:transparent; border:none; border-bottom:1px solid var(--accent); color:white; font-size:1.1rem; font-weight:bold; width:80%; text-align:center; outline:none;">
+                <button onclick="sairDaSala()" style="background:none; border:none; color:var(--danger); font-size:0.65rem; font-weight:bold; cursor:pointer; text-transform:uppercase; margin-top:5px;">[ Sair e Voltar ao Início ]</button>
             </div>
 
             <div id="filter-ui" class="filter-section">
@@ -180,10 +189,9 @@
 
         <div style="text-align: center;"><button onclick="toggleAdmin()" style="background:none; border:none; color:var(--danger); font-size:0.6rem; margin-top:20px; cursor:pointer;">⚙️ ACESSO RESTRITO</button></div>
         <div id="admin-panel" class="admin-section">
-            <p style="color:var(--danger); font-weight:bold; font-size:0.7rem; margin-bottom:15px; text-align:center;">AJUSTE MANUAL DE RANKING</p>
             <div id="admin-edit-container"></div>
             <button class="welcome-btn" style="background:var(--success); color:white; margin-top:15px; font-size:0.7rem;" onclick="salvarAjusteRanking()">SALVAR ALTERAÇÕES DE RANKING</button>
-            <div class="admin-grid">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
                 <button class="btn-admin" style="background:var(--accent); color:white;" onclick="fazerBackup()">📥 Backup JSON</button>
                 <button class="btn-admin" style="background:var(--danger); color:white;" onclick="resetTotal()">⚠️ Reset Total</button>
             </div>
@@ -225,27 +233,29 @@ window.onload = () => {
         const history = localStorage.getItem('FC_LAST_ROOM');
         if(history) {
             document.getElementById('last-room-container').style.display = 'block';
-            document.getElementById('btn-resume').innerText = "VOLTAR PARA SALA: " + history;
+            document.getElementById('btn-resume').innerText = "SALA: " + history.toUpperCase();
             document.getElementById('btn-resume').onclick = () => entrarApp(history);
         }
     }
 };
-
-function novaSala() { const n = prompt("Nome da nova Resenha:"); if(n) entrarApp(n); }
-function trocarSala() { const n = prompt("Nome da sala:"); if(n) entrarApp(n); }
-function sairDaSala() { if(confirm("Deseja voltar para a tela inicial?")) { sessionStorage.removeItem('FC_SESSION_ROOM'); location.reload(); } }
 
 function entrarApp(nome) {
     salaAtual = nome.replace(/\s+/g, '');
     sessionStorage.setItem('FC_SESSION_ROOM', salaAtual);
     localStorage.setItem('FC_LAST_ROOM', salaAtual);
     
-    document.getElementById('welcome-screen').style.opacity = '0';
+    const welcome = document.getElementById('welcome-screen');
+    const app = document.getElementById('main-app');
+
+    welcome.style.opacity = '0';
     setTimeout(() => {
-        document.getElementById('welcome-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        document.getElementById('main-app').style.opacity = '1';
-    }, 500);
+        welcome.style.display = 'none';
+        app.style.display = 'block';
+        setTimeout(() => {
+            app.style.opacity = '1';
+            document.body.style.overflow = 'auto'; // Reativa scroll
+        }, 50);
+    }, 800);
     
     document.getElementById('label-sala-topo').innerText = "SALA: " + salaAtual;
     
@@ -257,13 +267,14 @@ function entrarApp(nome) {
     });
 }
 
+function novaSala() { const n = prompt("Nome da nova Resenha:"); if(n) entrarApp(n); }
+function trocarSala() { const n = prompt("Nome da sala:"); if(n) entrarApp(n); }
+function sairDaSala() { if(confirm("Voltar para o início?")) { sessionStorage.removeItem('FC_SESSION_ROOM'); location.reload(); } }
+
 function toggleTodosFiltros() {
     const checkboxes = document.querySelectorAll('#filter-ui input[type="checkbox"]');
-    const algumDesmarcado = Array.from(checkboxes).some(cb => !cb.checked);
-    checkboxes.forEach(cb => {
-        cb.checked = algumDesmarcado;
-        cb.parentElement.classList.toggle('active', algumDesmarcado);
-    });
+    const status = Array.from(checkboxes).some(cb => !cb.checked);
+    checkboxes.forEach(cb => { cb.checked = status; cb.parentElement.classList.toggle('active', status); });
     updateDatalist();
 }
 
@@ -309,7 +320,6 @@ function gerarLinha(c, i, j, k, pNames, jData) {
     const id = `c${c}_p${i}_p${j}_k${k}`;
     const jg = jData[id] || { g1: "", g2: "", t1: "", t2: "", tentativas: 0 };
     const trav = jg.tentativas >= 2;
-    // O VALOR DO INPUT É DEFINIDO PELO jg.g1 E jg.g2 DA NUVEM
     return `
     <div class="match-row">
         <div class="player-side left"><span class="p-name">${pNames[i]}</span><div class="team-box"><input class="t-input" id="${id}t1" list="lista-times" value="${jg.t1||''}" onchange="salvarTime('${id}',1,this.value)"></div></div>
@@ -322,7 +332,6 @@ function gerarLinha(c, i, j, k, pNames, jData) {
 }
 
 function salvarPlacarFirebase(id, player, valor) {
-    // Salva o valor no firebase assim que é digitado para persistir no F5
     db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ["g" + player]: valor });
     calcularTabela();
 }
@@ -330,9 +339,8 @@ function salvarPlacarFirebase(id, player, valor) {
 function gerirAcao(id) {
     const g1 = document.getElementById(id+'s1').value;
     const g2 = document.getElementById(id+'s2').value;
-    if(g1 === "" && g2 === "") {
-        sortearTime(id);
-    } else {
+    if(g1 === "" && g2 === "") { sortearTime(id); } 
+    else {
         const jg = (cloudData.jogos || {})[id] || { tentativas: 0 };
         if(jg.tentativas < 2 && confirm("Confirmar resultado definitivo?")) {
             db.ref(`salas/${salaAtual}/jogos/${id}`).update({ g1: parseInt(g1), g2: parseInt(g2), tentativas: jg.tentativas + 1 });
@@ -417,7 +425,6 @@ function finalizarTurno() {
     db.ref(`salas/${salaAtual}`).update({ [dbPath]: hist, rivalidade: riv, jogos: null });
 }
 
-// --- FUNÇÕES ADMIN ---
 function renderAdminEdit() {
     const pNames = document.getElementById('player-names').value.split(',').map(x => x.trim()).filter(x => x !== "");
     const isDuelo = pNames.length === 2;
@@ -457,4 +464,3 @@ function resetTotal() { if(confirm("⚠️ APAGAR TUDO?")) { db.ref(`salas/${sal
 </script>
 </body>
 </html>
-
