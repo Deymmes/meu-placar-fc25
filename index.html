@@ -20,46 +20,45 @@
         body {
             font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg);
             color: var(--text); padding: 0; margin: 0; min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* TELA DE BOAS-VINDAS */
+        /* TELA DE BOAS-VINDAS (ESTÁDIO DESFOCADO) */
         #welcome-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
-            background: url('bgtelainicial.jpg') no-repeat center center;
+            background: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
             background-size: cover;
-            transition: opacity 0.8s ease;
         }
         #welcome-screen::before {
             content: ""; position: absolute; inset: 0;
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.95) 100%);
-            backdrop-filter: blur(8px);
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
         .welcome-card {
-            position: relative; width: 65.5%; max-width: 300px;
+            position: relative; width: 85%; max-width: 320px;
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px); border-radius: 18px; padding: 22.5px; text-align: center;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px; padding: 30px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         .welcome-btn {
-            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
             font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 12px; transition: 0.3s;
         }
         .last-room-box { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* APP PRINCIPAL */
-        .main-app { padding: 10px; display: none; opacity: 0; transition: opacity 0.5s; }
+        /* APP PRINCIPAL - OCULTO POR PADRÃO */
+        #main-app { display: none; padding: 10px; opacity: 0; transition: opacity 0.5s; }
         .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
         
         .header-section { text-align: center; margin-bottom: 20px; padding-top: 10px; }
         .mode-title { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
 
         .participants-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 15px; }
-        .participants-label { font-size: 0.75rem; font-weight: 900; color: var(--accent); text-transform: uppercase; }
-
         .section-title { display: flex; align-items: center; gap: 10px; margin: 30px 0 15px; text-transform: uppercase; font-size: 0.7rem; font-weight: 900; color: var(--gold); letter-spacing: 1.5px; }
         .section-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, rgba(245, 158, 11, 0.5), transparent); }
 
-        /* FILTROS */
         .filter-section { background: var(--card-bg); border-radius: 12px; padding: 8px; display: flex; gap: 6px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; scrollbar-width: none; margin-top:10px; }
         .btn-tds { background: var(--gold); color: black; border: none; padding: 5px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 900; cursor: pointer; flex-shrink: 0; }
         .filter-chip { font-size: 0.6rem; background: rgba(15, 23, 42, 0.8); padding: 5px 10px; border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; font-weight: bold; white-space: nowrap; }
@@ -91,12 +90,9 @@
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
 
-        /* ADMIN PANEL */
         .admin-section { background: rgba(239, 68, 68, 0.1); border: 1px dashed var(--danger); border-radius: 12px; padding: 15px; margin: 20px 0; display: none; }
         .admin-edit-row { display: grid; grid-template-columns: 1fr 50px 50px 50px; gap: 5px; margin-bottom: 8px; align-items: center; }
         .admin-input { background: #000; border: 1px solid #444; color: var(--gold); text-align: center; padding: 5px; font-size: 0.7rem; border-radius: 4px; width: 100%; }
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn-admin { padding: 8px; font-size: 0.7rem; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -105,27 +101,28 @@
 
 <div id="welcome-screen">
     <div class="welcome-card">
-        <h2 style="font-weight:900; color:white; text-transform:uppercase; margin:0;">EA FC Pro</h2>
+        <h2 style="font-weight:900; color:white; text-transform:uppercase; margin:0; letter-spacing:2px;">EA FC Pro</h2>
         <p style="color:#94a3b8; font-size:0.8rem; margin:10px 0 25px;">Onde os mitos se encontram.</p>
+        
         <button class="welcome-btn" style="background:var(--gold); color:black;" onclick="novaSala()">CRIAR NOVA SALA</button>
         <button class="welcome-btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);" onclick="trocarSala()">ENTRAR EM SALA</button>
         
         <div id="last-room-container" class="last-room-box" style="display:none;">
-            <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:10px;">Deseja continuar de onde parou?</p>
+            <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:10px;">Continuar de onde parou?</p>
             <button id="btn-resume" class="welcome-btn" style="background:var(--accent); color:white;"></button>
         </div>
     </div>
 </div>
 
-<div id="main-app" class="main-app">
+<div id="main-app">
     <div class="container">
         <div class="header-section">
-            <p id="label-sala-topo" style="font-size:0.6rem; color:var(--gold); margin:0; text-transform:uppercase; letter-spacing:2px; cursor:pointer;">SALA: ...</p>
+            <p id="label-sala-topo" style="font-size:0.6rem; color:var(--gold); margin:0; text-transform:uppercase; letter-spacing:2px; cursor:pointer;" onclick="sairDaSala()">SALA: ...</p>
             <h1 id="mode-title-display" class="mode-title">Torneio Champions</h1>
             
             <div class="participants-row">
                 <input type="text" id="player-names" onchange="salvarPlayersNuvem()" placeholder="Ex: João, Deymmes" style="background:transparent; border:none; border-bottom:1px solid var(--accent); color:white; font-size:1rem; font-weight:bold; width:80%; text-align:center; outline:none;">
-                <button onclick="sairDaSala()" style="background:none; border:none; color:var(--danger); font-size:0.65rem; font-weight:bold; cursor:pointer; text-transform:uppercase;">[ Voltar para o Início ]</button>
+                <button onclick="sairDaSala()" style="background:none; border:none; color:var(--danger); font-size:0.65rem; font-weight:bold; cursor:pointer; text-transform:uppercase; margin-top:5px;">[ Sair da Sala ]</button>
             </div>
 
             <div id="filter-ui" class="filter-section">
@@ -178,14 +175,13 @@
         <button class="btn-clear" onclick="limparPlacares()">🧹 Limpar placares</button>
         <button class="btn-finish" onclick="finalizarTurno()">Encerrar e Sincronizar Tudo</button>
 
-        <div style="text-align: center;"><button onclick="toggleAdmin()" style="background:none; border:none; color:var(--danger); font-size:0.6rem; margin-top:20px; cursor:pointer;">⚙️ ACESSO RESTRITO</button></div>
+        <div style="text-align: center;"><button onclick="toggleAdmin()" style="background:none; border:none; color:var(--danger); font-size:0.6rem; margin-top:20px; cursor:pointer;">⚙️ ADMIN</button></div>
         <div id="admin-panel" class="admin-section">
-            <p style="color:var(--danger); font-weight:bold; font-size:0.7rem; margin-bottom:15px; text-align:center;">AJUSTE MANUAL DE RANKING</p>
             <div id="admin-edit-container"></div>
-            <button class="welcome-btn" style="background:var(--success); color:white; margin-top:15px; font-size:0.7rem;" onclick="salvarAjusteRanking()">SALVAR ALTERAÇÕES DE RANKING</button>
-            <div class="admin-grid">
-                <button class="btn-admin" style="background:var(--accent); color:white;" onclick="fazerBackup()">📥 Backup JSON</button>
-                <button class="btn-admin" style="background:var(--danger); color:white;" onclick="resetTotal()">⚠️ Reset Total</button>
+            <button class="welcome-btn" style="background:var(--success); color:white; margin-top:15px; font-size:0.7rem;" onclick="salvarAjusteRanking()">SALVAR RANKING</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                <button class="btn-clear" style="margin:0" onclick="fazerBackup()">📥 Backup</button>
+                <button class="btn-clear" style="margin:0; border-color:var(--danger); color:var(--danger);" onclick="resetTotal()">⚠️ Reset</button>
             </div>
         </div>
     </div>
@@ -204,12 +200,12 @@ const firebaseConfig = {
 };
 
 const timesPool = {
-    ing: ["Man. City", "Liverpool", "Chelsea", "Arsenal", "Tottenham", "Man. United", "Newcastle", "Aston Villa", "West Ham", "Brighton"],
-    esp: ["Real Madrid", "Barcelona", "Atlético Madrid", "Girona", "Sevilla", "Real Sociedad", "Betis", "Villarreal"],
-    ita: ["Inter Milão", "Juventus", "AC Milan", "Napoli", "Atalanta", "AS Roma", "Lazio", "Fiorentina"],
-    ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund", "RB Leipzig", "Stuttgart", "Eintracht Frankfurt"],
-    sel: ["Brasil 🇧🇷", "Espanha 🇪🇸", "França 🇫🇷", "Argentina 🇦🇷", "Portugal 🇵🇹", "Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Alemanha 🇩🇪", "Holanda 🇳🇱", "Bélgica 🇧🇪"],
-    top3: ["Real Madrid", "Man. City", "Bayern München", "PSG", "Inter Milão", "Liverpool", "Bayer Leverkusen", "Arsenal"]
+    ing: ["Man. City", "Liverpool", "Chelsea", "Arsenal", "Tottenham", "Man. United", "Newcastle", "Aston Villa"],
+    esp: ["Real Madrid", "Barcelona", "Atlético Madrid", "Girona", "Sevilla", "Real Sociedad"],
+    ita: ["Inter Milão", "Juventus", "AC Milan", "Napoli", "Atalanta", "AS Roma"],
+    ale: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund", "RB Leipzig", "Stuttgart"],
+    sel: ["Brasil 🇧🇷", "Espanha 🇪🇸", "França 🇫🇷", "Argentina 🇦🇷", "Portugal 🇵🇹", "Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿"],
+    top3: ["Real Madrid", "Man. City", "Bayern München", "PSG", "Inter Milão", "Liverpool"]
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -217,35 +213,38 @@ const db = firebase.database();
 let salaAtual = "";
 let cloudData = {};
 
+// --- LÓGICA DE INICIALIZAÇÃO BLINDADA ---
 window.onload = () => {
     const session = sessionStorage.getItem('FC_SESSION_ROOM');
-    if(session) {
-        entrarApp(session); 
-    } else {
-        const history = localStorage.getItem('FC_LAST_ROOM');
-        if(history) {
-            document.getElementById('last-room-container').style.display = 'block';
-            document.getElementById('btn-resume').innerText = "VOLTAR PARA SALA: " + history;
-            document.getElementById('btn-resume').onclick = () => entrarApp(history);
-        }
+    const lastRoom = localStorage.getItem('FC_LAST_ROOM');
+    
+    if (session) {
+        entrarApp(session);
+    } else if (lastRoom) {
+        document.getElementById('last-room-container').style.display = 'block';
+        document.getElementById('btn-resume').innerText = lastRoom.toUpperCase();
+        document.getElementById('btn-resume').onclick = () => entrarApp(lastRoom);
     }
 };
 
-function novaSala() { const n = prompt("Nome da nova Resenha:"); if(n) entrarApp(n); }
-function trocarSala() { const n = prompt("Nome da sala:"); if(n) entrarApp(n); }
-function sairDaSala() { if(confirm("Deseja voltar para a tela inicial?")) { sessionStorage.removeItem('FC_SESSION_ROOM'); location.reload(); } }
+function novaSala() { const n = prompt("Nome da Resenha:"); if(n) entrarApp(n); }
+function trocarSala() { const n = prompt("Qual sala deseja entrar?"); if(n) entrarApp(n); }
+function sairDaSala() { if(confirm("Voltar ao início?")) { sessionStorage.removeItem('FC_SESSION_ROOM'); location.reload(); } }
 
 function entrarApp(nome) {
     salaAtual = nome.replace(/\s+/g, '');
     sessionStorage.setItem('FC_SESSION_ROOM', salaAtual);
     localStorage.setItem('FC_LAST_ROOM', salaAtual);
     
-    document.getElementById('welcome-screen').style.opacity = '0';
+    const welcome = document.getElementById('welcome-screen');
+    const app = document.getElementById('main-app');
+
+    welcome.style.opacity = '0';
     setTimeout(() => {
-        document.getElementById('welcome-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        document.getElementById('main-app').style.opacity = '1';
-    }, 500);
+        welcome.style.display = 'none';
+        app.style.display = 'block';
+        setTimeout(() => app.style.opacity = '1', 50);
+    }, 600);
     
     document.getElementById('label-sala-topo').innerText = "SALA: " + salaAtual;
     
@@ -257,17 +256,16 @@ function entrarApp(nome) {
     });
 }
 
+// --- FUNÇÕES DE JOGO ---
 function toggleTodosFiltros() {
-    const checkboxes = document.querySelectorAll('#filter-ui input[type="checkbox"]');
-    const algumDesmarcado = Array.from(checkboxes).some(cb => !cb.checked);
-    checkboxes.forEach(cb => {
-        cb.checked = algumDesmarcado;
-        cb.parentElement.classList.toggle('active', algumDesmarcado);
-    });
+    const cbs = document.querySelectorAll('#filter-ui input');
+    const status = Array.from(cbs).some(c => !c.checked);
+    cbs.forEach(c => { c.checked = status; c.parentElement.classList.toggle('active', status); });
     updateDatalist();
 }
 
 function toggleFiltro(el) { el.parentElement.classList.toggle('active', el.checked); updateDatalist(); }
+
 function updateDatalist() {
     const ativos = document.querySelectorAll('.filter-chip.active input');
     let h = ''; ativos.forEach(a => timesPool[a.value].forEach(t => h += `<option value="${t}">`));
@@ -309,7 +307,6 @@ function gerarLinha(c, i, j, k, pNames, jData) {
     const id = `c${c}_p${i}_p${j}_k${k}`;
     const jg = jData[id] || { g1: "", g2: "", t1: "", t2: "", tentativas: 0 };
     const trav = jg.tentativas >= 2;
-    // O VALOR DO INPUT É DEFINIDO PELO jg.g1 E jg.g2 DA NUVEM
     return `
     <div class="match-row">
         <div class="player-side left"><span class="p-name">${pNames[i]}</span><div class="team-box"><input class="t-input" id="${id}t1" list="lista-times" value="${jg.t1||''}" onchange="salvarTime('${id}',1,this.value)"></div></div>
@@ -321,20 +318,15 @@ function gerarLinha(c, i, j, k, pNames, jData) {
     </div>`;
 }
 
-function salvarPlacarFirebase(id, player, valor) {
-    // Salva o valor no firebase assim que é digitado para persistir no F5
-    db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ["g" + player]: valor });
-    calcularTabela();
-}
+function salvarPlacarFirebase(id, p, v) { db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ["g" + p]: v }); calcularTabela(); }
 
 function gerirAcao(id) {
     const g1 = document.getElementById(id+'s1').value;
     const g2 = document.getElementById(id+'s2').value;
-    if(g1 === "" && g2 === "") {
-        sortearTime(id);
-    } else {
+    if(g1 === "" && g2 === "") { sortearTime(id); } 
+    else {
         const jg = (cloudData.jogos || {})[id] || { tentativas: 0 };
-        if(jg.tentativas < 2 && confirm("Confirmar resultado definitivo?")) {
+        if(jg.tentativas < 2 && confirm("Confirmar placar?")) {
             db.ref(`salas/${salaAtual}/jogos/${id}`).update({ g1: parseInt(g1), g2: parseInt(g2), tentativas: jg.tentativas + 1 });
         }
     }
@@ -344,20 +336,18 @@ function sortearTime(idJogo) {
     const ativos = document.querySelectorAll('.filter-chip.active input');
     let pool = []; ativos.forEach(a => pool = pool.concat(timesPool[a.value]));
     const ocupados = [];
-    if (cloudData.jogos) {
-        Object.values(cloudData.jogos).forEach(jg => { if (jg.t1) ocupados.push(jg.t1); if (jg.t2) ocupados.push(jg.t2); });
-    }
+    if (cloudData.jogos) Object.values(cloudData.jogos).forEach(j => { if(j.t1) ocupados.push(j.t1); if(j.t2) ocupados.push(j.t2); });
     let disp = pool.filter(t => !ocupados.includes(t));
-    if(disp.length < 2) disp = pool; 
-    const t1 = disp[Math.floor(Math.random() * disp.length)];
-    let t2 = disp[Math.floor(Math.random() * disp.length)];
-    while(t1 === t2 && disp.length > 1) t2 = disp[Math.floor(Math.random() * disp.length)];
+    if(disp.length < 2) disp = pool;
+    const t1 = disp[Math.floor(Math.random()*disp.length)];
+    let t2 = disp[Math.floor(Math.random()*disp.length)];
+    while(t1 === t2) t2 = disp[Math.floor(Math.random()*disp.length)];
     db.ref(`salas/${salaAtual}/jogos/${idJogo}`).update({ t1: t1, t2: t2 });
 }
 
 function salvarTime(id, p, v) { db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ['t'+p]: v }); }
-function salvarPlayersNuvem() { if(confirm("Mudar jogadores resetará a rodada. Prosseguir?")) db.ref(`salas/${salaAtual}`).update({ players: document.getElementById('player-names').value, jogos: null }); }
-function limparPlacares() { if(confirm("Limpar placares?")) db.ref(`salas/${salaAtual}/jogos`).remove(); }
+function salvarPlayersNuvem() { if(confirm("Mudar jogadores limpa os jogos. Continuar?")) db.ref(`salas/${salaAtual}`).update({ players: document.getElementById('player-names').value, jogos: null }); }
+function limparPlacares() { if(confirm("Limpar rodada?")) db.ref(`salas/${salaAtual}/jogos`).remove(); }
 
 function calcularTabela() {
     const pNames = document.getElementById('player-names').value.split(',').map(x => x.trim()).filter(x => x !== "");
@@ -417,45 +407,34 @@ function finalizarTurno() {
     db.ref(`salas/${salaAtual}`).update({ [dbPath]: hist, rivalidade: riv, jogos: null });
 }
 
-// --- FUNÇÕES ADMIN ---
+// --- ADMIN ---
+function toggleAdmin() { if(prompt("Senha:") === MASTER_KEY) { const s = document.getElementById('admin-panel'); s.style.display = s.style.display === 'block' ? 'none' : 'block'; } }
 function renderAdminEdit() {
     const pNames = document.getElementById('player-names').value.split(',').map(x => x.trim()).filter(x => x !== "");
-    const isDuelo = pNames.length === 2;
-    const dbPath = isDuelo ? 'ranking_duelo' : 'ranking_torneio';
+    const dbPath = pNames.length === 2 ? 'ranking_duelo' : 'ranking_torneio';
     const hist = cloudData[dbPath] || {};
     let html = '<div class="admin-edit-row" style="font-weight:bold; color:var(--gold);"><span>Player</span><span>🏆</span><span>📈</span><span>⚽</span></div>';
     pNames.forEach(p => {
         const d = hist[p] || { titulos: 0, pontos: 0, gols: 0 };
-        html += `<div class="admin-edit-row">
-            <span style="font-size:0.6rem; overflow:hidden;">${p}</span>
+        html += `<div class="admin-edit-row"><span>${p}</span>
             <input type="number" class="admin-input" id="edit-t-${p}" value="${d.titulos}">
             <input type="number" class="admin-input" id="edit-p-${p}" value="${d.pontos}">
-            <input type="number" class="admin-input" id="edit-g-${p}" value="${d.gols}">
-        </div>`;
+            <input type="number" class="admin-input" id="edit-g-${p}" value="${d.gols}"></div>`;
     });
     document.getElementById('admin-edit-container').innerHTML = html;
 }
-
 function salvarAjusteRanking() {
     const pNames = document.getElementById('player-names').value.split(',').map(x => x.trim()).filter(x => x !== "");
-    const isDuelo = pNames.length === 2;
-    const dbPath = isDuelo ? 'ranking_duelo' : 'ranking_torneio';
-    let novoRanking = {};
-    pNames.forEach(p => {
-        novoRanking[p] = {
-            titulos: parseInt(document.getElementById(`edit-t-${p}`).value) || 0,
-            pontos: parseInt(document.getElementById(`edit-p-${p}`).value) || 0,
-            gols: parseInt(document.getElementById(`edit-g-${p}`).value) || 0
-        };
+    const dbPath = pNames.length === 2 ? 'ranking_duelo' : 'ranking_torneio';
+    let nR = {}; pNames.forEach(p => {
+        nR[p] = { titulos: parseInt(document.getElementById(`edit-t-${p}`).value)||0,
+                  pontos: parseInt(document.getElementById(`edit-p-${p}`).value)||0,
+                  gols: parseInt(document.getElementById(`edit-g-${p}`).value)||0 };
     });
-    db.ref(`salas/${salaAtual}/${dbPath}`).set(novoRanking).then(() => alert("Ranking atualizado!"));
+    db.ref(`salas/${salaAtual}/${dbPath}`).set(nR).then(() => alert("Salvo!"));
 }
-
-function toggleAdmin() { if(prompt("Senha:") === MASTER_KEY) { const s = document.getElementById('admin-panel'); s.style.display = s.style.display === 'block' ? 'none' : 'block'; } }
-function fazerBackup() { const blob = new Blob([JSON.stringify(cloudData, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `backup_${salaAtual}.json`; a.click(); }
-function resetTotal() { if(confirm("⚠️ APAGAR TUDO?")) { db.ref(`salas/${salaAtual}`).remove(); location.reload(); } }
+function fazerBackup() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(cloudData)], {type:'application/json'})); a.download = `backup_${salaAtual}.json`; a.click(); }
+function resetTotal() { if(confirm("Reset Total?")) { db.ref(`salas/${salaAtual}`).remove(); location.reload(); } }
 </script>
 </body>
 </html>
-
-
