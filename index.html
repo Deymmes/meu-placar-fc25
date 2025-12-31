@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EA FC Pro - Elite Edition</title>
     
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -20,10 +27,10 @@
         body {
             font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg);
             color: var(--text); padding: 0; margin: 0; min-height: 100vh;
-            overflow: hidden; /* Evita scroll na tela de boas-vindas */
+            overflow: hidden; /* Trava o scroll na entrada */
         }
 
-        /* TELA DE BOAS-VINDAS - ESTILO RECUPERADO */
+        /* TELA DE BOAS-VINDAS - GLASSMORPHISM */
         #welcome-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
@@ -32,17 +39,15 @@
             transition: opacity 0.8s ease;
         }
 
-        /* Overlay escuro para dar contraste */
         #welcome-screen::after {
             content: ""; position: absolute; inset: 0;
-            background: rgba(15, 23, 42, 0.5); /* Escurece um pouco a imagem */
+            background: rgba(15, 23, 42, 0.5);
             z-index: 1;
         }
 
         .welcome-card {
             position: relative; z-index: 2;
             width: 85%; max-width: 320px;
-            /* O EFEITO DE VIDRO QUE VOCÊ GOSTOU */
             background: rgba(255, 255, 255, 0.1); 
             border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(15px); 
@@ -64,12 +69,9 @@
         .mode-title { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
 
         .participants-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 15px; }
-        .participants-label { font-size: 0.75rem; font-weight: 900; color: var(--accent); text-transform: uppercase; }
-
         .section-title { display: flex; align-items: center; gap: 10px; margin: 30px 0 15px; text-transform: uppercase; font-size: 0.7rem; font-weight: 900; color: var(--gold); letter-spacing: 1.5px; }
         .section-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, rgba(245, 158, 11, 0.5), transparent); }
 
-        /* FILTROS */
         .filter-section { background: var(--card-bg); border-radius: 12px; padding: 8px; display: flex; gap: 6px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; scrollbar-width: none; margin-top:10px; }
         .btn-tds { background: var(--gold); color: black; border: none; padding: 5px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 900; cursor: pointer; flex-shrink: 0; }
         .filter-chip { font-size: 0.6rem; background: rgba(15, 23, 42, 0.8); padding: 5px 10px; border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; font-weight: bold; white-space: nowrap; }
@@ -117,7 +119,7 @@
         <p style="color:#cbd5e1; font-size:0.8rem; margin:10px 0 25px;">Onde os mitos se encontram.</p>
         
         <button class="welcome-btn" style="background:var(--gold); color:black;" onclick="novaSala()">CRIAR NOVA SALA</button>
-        <button class="welcome-btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);" onclick="trocarSala()">ENTRAR EM SALA</button>
+        <button class="welcome-btn" style="background:rgba(255, 255, 255, 0.1); color:white; border:1px solid rgba(255,255,255,0.2);" onclick="trocarSala()">ENTRAR EM SALA</button>
         
         <div id="last-room-container" class="last-room-box" style="display:none;">
             <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:10px;">Continuar de onde parou?</p>
@@ -233,7 +235,7 @@ window.onload = () => {
         const history = localStorage.getItem('FC_LAST_ROOM');
         if(history) {
             document.getElementById('last-room-container').style.display = 'block';
-            document.getElementById('btn-resume').innerText = "SALA: " + history.toUpperCase();
+            document.getElementById('btn-resume').innerText = history.toUpperCase();
             document.getElementById('btn-resume').onclick = () => entrarApp(history);
         }
     }
@@ -253,7 +255,7 @@ function entrarApp(nome) {
         app.style.display = 'block';
         setTimeout(() => {
             app.style.opacity = '1';
-            document.body.style.overflow = 'auto'; // Reativa scroll
+            document.body.style.overflow = 'auto'; 
         }, 50);
     }, 800);
     
@@ -461,6 +463,15 @@ function salvarAjusteRanking() {
 function toggleAdmin() { if(prompt("Senha:") === MASTER_KEY) { const s = document.getElementById('admin-panel'); s.style.display = s.style.display === 'block' ? 'none' : 'block'; } }
 function fazerBackup() { const blob = new Blob([JSON.stringify(cloudData, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `backup_${salaAtual}.json`; a.click(); }
 function resetTotal() { if(confirm("⚠️ APAGAR TUDO?")) { db.ref(`salas/${salaAtual}`).remove(); location.reload(); } }
+
+// REGISTRO DO SERVICE WORKER PARA HABILITAR INSTALAÇÃO
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('SW registrado!', reg))
+            .catch(err => console.log('Erro no SW:', err));
+    });
+}
 </script>
 </body>
 </html>
