@@ -27,10 +27,10 @@
         body {
             font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg);
             color: var(--text); padding: 0; margin: 0; min-height: 100vh;
-            overflow: hidden; /* Trava o scroll na entrada */
+            overflow: hidden; /* Trava o scroll inicial */
         }
 
-        /* TELA DE BOAS-VINDAS - GLASSMORPHISM */
+        /* TELA DE BOAS-VINDAS */
         #welcome-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
@@ -61,33 +61,35 @@
             font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 12px; transition: 0.3s;
         }
 
-        /* APP PRINCIPAL */
-        .main-app { padding: 10px; display: none; opacity: 0; transition: opacity 0.5s; overflow-y: auto; height: 100vh; }
+        /* APP PRINCIPAL - TRAVA ANTI-DUPLICAÇÃO */
+        .main-app { 
+            padding: 10px; 
+            display: none !important; /* Força esconder no carregamento */
+            opacity: 0; 
+            transition: opacity 0.5s; 
+            overflow-y: auto; 
+            height: 100vh; 
+        }
+
         .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
-        
         .header-section { text-align: center; margin-bottom: 20px; padding-top: 10px; }
         .mode-title { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
-
         .participants-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 15px; }
         .section-title { display: flex; align-items: center; gap: 10px; margin: 30px 0 15px; text-transform: uppercase; font-size: 0.7rem; font-weight: 900; color: var(--gold); letter-spacing: 1.5px; }
         .section-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, rgba(245, 158, 11, 0.5), transparent); }
-
         .filter-section { background: var(--card-bg); border-radius: 12px; padding: 8px; display: flex; gap: 6px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; scrollbar-width: none; margin-top:10px; }
         .btn-tds { background: var(--gold); color: black; border: none; padding: 5px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 900; cursor: pointer; flex-shrink: 0; }
         .filter-chip { font-size: 0.6rem; background: rgba(15, 23, 42, 0.8); padding: 5px 10px; border-radius: 20px; border: 1px solid #475569; cursor: pointer; color: #94a3b8; font-weight: bold; white-space: nowrap; }
         .filter-chip.active { border-color: var(--gold); color: white; background: rgba(245, 158, 11, 0.4); }
         .filter-chip input { display: none; }
-
         .rankings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .rank-card { background: var(--card-bg); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); }
         .rank-card h3 { margin: 0 0 8px 0; font-size: 0.5rem; color: var(--gold); text-align: center; text-transform: uppercase; }
         .rank-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
         .table-container { background: var(--card-bg); border-radius: 12px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         td { padding: 8px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .td-name { text-align: left !important; font-weight: 800; padding-left: 10px; }
-
         .match-section { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .match-row { display: grid; grid-template-columns: 1fr 45px 25px 45px 1fr 35px; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .player-side.left { text-align: right; padding-right: 15px; }
@@ -95,14 +97,11 @@
         .t-input { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 5px 0; border-radius: 4px; font-size: 0.68rem; width: 100%; text-align: center; outline: none; }
         .score-input { background: var(--accent); border: none; border-radius: 6px; color: white; height: 42px; font-size: 1.4rem; font-weight: 900; text-align: center; width: 45px; }
         .score-input:disabled { background: #334155; opacity: 0.6; }
-
         .rivalry-section { background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%); border-radius: 16px; padding: 20px; border: 1px solid rgba(245, 158, 11, 0.3); }
         .dominance-bar-container { height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px 0; overflow: hidden; display: flex; }
         .dom-fill { height: 100%; transition: width 0.6s ease; }
-
         .btn-finish { background: var(--success); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
-
         .admin-section { background: rgba(239, 68, 68, 0.1); border: 1px dashed var(--danger); border-radius: 12px; padding: 15px; margin: 20px 0; display: none; }
         .admin-edit-row { display: grid; grid-template-columns: 1fr 50px 50px 50px; gap: 5px; margin-bottom: 8px; align-items: center; }
         .admin-input { background: #000; border: 1px solid #444; color: var(--gold); text-align: center; padding: 5px; font-size: 0.7rem; border-radius: 4px; width: 100%; }
@@ -249,13 +248,18 @@ function entrarApp(nome) {
     const welcome = document.getElementById('welcome-screen');
     const app = document.getElementById('main-app');
 
+    // 1. Inicia transição de saída da tela de boas-vindas
     welcome.style.opacity = '0';
+    
     setTimeout(() => {
         welcome.style.display = 'none';
-        app.style.display = 'block';
+        
+        // 2. FORÇA O APP A APARECER QUEBRANDO O !IMPORTANT DO CSS
+        app.style.setProperty('display', 'block', 'important');
+        
         setTimeout(() => {
             app.style.opacity = '1';
-            document.body.style.overflow = 'auto'; 
+            document.body.style.overflow = 'auto'; // Reativa scroll
         }, 50);
     }, 800);
     
@@ -464,7 +468,6 @@ function toggleAdmin() { if(prompt("Senha:") === MASTER_KEY) { const s = documen
 function fazerBackup() { const blob = new Blob([JSON.stringify(cloudData, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `backup_${salaAtual}.json`; a.click(); }
 function resetTotal() { if(confirm("⚠️ APAGAR TUDO?")) { db.ref(`salas/${salaAtual}`).remove(); location.reload(); } }
 
-// REGISTRO DO SERVICE WORKER PARA HABILITAR INSTALAÇÃO
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
