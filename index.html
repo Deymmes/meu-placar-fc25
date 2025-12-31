@@ -53,7 +53,7 @@
         .header-section { text-align: center; margin-bottom: 20px; padding-top: 10px; }
         .mode-title { text-transform: uppercase; font-weight: 900; font-size: 1.1rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
 
-        .participants-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; }
+        .participants-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 15px; }
         .participants-label { font-size: 0.75rem; font-weight: 900; color: var(--accent); text-transform: uppercase; }
 
         .section-title { display: flex; align-items: center; gap: 10px; margin: 30px 0 15px; text-transform: uppercase; font-size: 0.7rem; font-weight: 900; color: var(--gold); letter-spacing: 1.5px; }
@@ -124,8 +124,8 @@
             <h1 id="mode-title-display" class="mode-title">Torneio Champions</h1>
             
             <div class="participants-row">
-                <span class="participants-label">Participantes:</span>
-                <input type="text" id="player-names" onchange="salvarPlayersNuvem()" placeholder="Ex: João, Deymmes" style="background:transparent; border:none; border-bottom:1px solid var(--accent); color:white; font-size:1rem; font-weight:bold; width:60%; outline:none;">
+                <input type="text" id="player-names" onchange="salvarPlayersNuvem()" placeholder="Ex: João, Deymmes" style="background:transparent; border:none; border-bottom:1px solid var(--accent); color:white; font-size:1rem; font-weight:bold; width:80%; text-align:center; outline:none;">
+                <button onclick="sairDaSala()" style="background:none; border:none; color:var(--danger); font-size:0.65rem; font-weight:bold; cursor:pointer; text-transform:uppercase;">[ Voltar para o Início ]</button>
             </div>
 
             <div id="filter-ui" class="filter-section">
@@ -233,6 +233,7 @@ window.onload = () => {
 
 function novaSala() { const n = prompt("Nome da nova Resenha:"); if(n) entrarApp(n); }
 function trocarSala() { const n = prompt("Nome da sala:"); if(n) entrarApp(n); }
+function sairDaSala() { if(confirm("Deseja voltar para a tela inicial?")) { sessionStorage.removeItem('FC_SESSION_ROOM'); location.reload(); } }
 
 function entrarApp(nome) {
     salaAtual = nome.replace(/\s+/g, '');
@@ -247,8 +248,7 @@ function entrarApp(nome) {
     }, 500);
     
     document.getElementById('label-sala-topo').innerText = "SALA: " + salaAtual;
-    document.getElementById('label-sala-topo').onclick = () => { if(confirm("Sair da sala?")) { sessionStorage.removeItem('FC_SESSION_ROOM'); location.reload(); } };
-
+    
     db.ref('salas/' + salaAtual).on('value', snap => {
         cloudData = snap.val() || {};
         if(cloudData.players) document.getElementById('player-names').value = cloudData.players;
@@ -309,15 +309,22 @@ function gerarLinha(c, i, j, k, pNames, jData) {
     const id = `c${c}_p${i}_p${j}_k${k}`;
     const jg = jData[id] || { g1: "", g2: "", t1: "", t2: "", tentativas: 0 };
     const trav = jg.tentativas >= 2;
+    // O VALOR DO INPUT É DEFINIDO PELO jg.g1 E jg.g2 DA NUVEM
     return `
     <div class="match-row">
         <div class="player-side left"><span class="p-name">${pNames[i]}</span><div class="team-box"><input class="t-input" id="${id}t1" list="lista-times" value="${jg.t1||''}" onchange="salvarTime('${id}',1,this.value)"></div></div>
-        <input type="number" class="score-input placar" id="${id}s1" value="${jg.g1}" ${trav?'disabled':''} oninput="calcularTabela()">
+        <input type="number" class="score-input placar" id="${id}s1" value="${jg.g1}" ${trav?'disabled':''} oninput="salvarPlacarFirebase('${id}', 1, this.value)">
         <div style="text-align:center; color:var(--gold); font-weight:900; opacity:0.3;">x</div>
-        <input type="number" class="score-input placar" id="${id}s2" value="${jg.g2}" ${trav?'disabled':''} oninput="calcularTabela()">
+        <input type="number" class="score-input placar" id="${id}s2" value="${jg.g2}" ${trav?'disabled':''} oninput="salvarPlacarFirebase('${id}', 2, this.value)">
         <div class="player-side right"><span class="p-name">${pNames[j]}</span><div class="team-box"><input class="t-input" id="${id}t2" list="lista-times" value="${jg.t2||''}" onchange="salvarTime('${id}',2,this.value)"></div></div>
         <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="gerirAcao('${id}')">${trav ? '🔒' : (jg.g1 !== "" || jg.g2 !== "" ? '🔓' : '🎲')}</button>
     </div>`;
+}
+
+function salvarPlacarFirebase(id, player, valor) {
+    // Salva o valor no firebase assim que é digitado para persistir no F5
+    db.ref(`salas/${salaAtual}/jogos/${id}`).update({ ["g" + player]: valor });
+    calcularTabela();
 }
 
 function gerirAcao(id) {
@@ -327,7 +334,7 @@ function gerirAcao(id) {
         sortearTime(id);
     } else {
         const jg = (cloudData.jogos || {})[id] || { tentativas: 0 };
-        if(jg.tentativas < 2 && confirm("Confirmar resultado?")) {
+        if(jg.tentativas < 2 && confirm("Confirmar resultado definitivo?")) {
             db.ref(`salas/${salaAtual}/jogos/${id}`).update({ g1: parseInt(g1), g2: parseInt(g2), tentativas: jg.tentativas + 1 });
         }
     }
